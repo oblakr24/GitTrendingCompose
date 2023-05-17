@@ -1,6 +1,8 @@
 package com.rokoblak.gittrendingcompose.ui.reposlisting.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Divider
@@ -26,7 +28,12 @@ fun GitReposListing(data: GitReposListingData, onAction: (ListingAction) -> Unit
             // TODO: Show error cell
         }
         GitReposListingData.Initial -> {
-            // TODO: Show initial cell
+            Column(modifier = Modifier.fillMaxSize()) {
+                (0..10).forEach { _ ->
+                    LoadingCell()
+                    Divider(startIndent = 12.dp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f))
+                }
+            }
         }
         is GitReposListingData.Loaded -> {
             val lazyListState = rememberLazyListState()
@@ -53,7 +60,9 @@ fun GitReposListing(data: GitReposListingData, onAction: (ListingAction) -> Unit
                     }
                 )
                 if (data.showLoadingAtEnd) {
-                    // TODO: Show loading cell
+                    item {
+                        LoadingCell()
+                    }
                 }
             }
         }
