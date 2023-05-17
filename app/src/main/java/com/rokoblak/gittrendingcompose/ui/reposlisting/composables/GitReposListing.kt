@@ -1,8 +1,6 @@
 package com.rokoblak.gittrendingcompose.ui.reposlisting.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Divider
@@ -32,6 +30,13 @@ fun GitReposListing(data: GitReposListingData, onAction: (ListingAction) -> Unit
         }
         is GitReposListingData.Loaded -> {
             val lazyListState = rememberLazyListState()
+            ListingScrollTracker(
+                state = data,
+                listState = lazyListState,
+                onScrollSettledNearEnd = {
+                    onAction(ListingAction.NextPageTriggerReached)
+                }
+            )
             LazyColumn(state = lazyListState, modifier = Modifier.verticalScrollbar(lazyListState)) {
                 items(
                     count = data.items.size,
