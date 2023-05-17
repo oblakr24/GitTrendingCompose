@@ -1,7 +1,6 @@
 package com.rokoblak.gittrendingcompose.service
 
 import android.content.Context
-import androidx.annotation.VisibleForTesting
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -9,6 +8,7 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import com.rokoblak.gittrendingcompose.service.PersistedStorage.Prefs
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
@@ -27,10 +27,14 @@ interface PersistedStorage {
 
     @kotlinx.serialization.Serializable
     data class Prefs(
-        val darkMode: Boolean?
+        val darkMode: Boolean? // null -> no user selection, i.e. follow the system
     )
 }
 
+/**
+ * Datastore-backed persisted data i.e. settings.
+ * Just one boolean for now, but could be easily extended.
+ */
 @Singleton
 class AppStorage @Inject constructor(
     @ApplicationContext appContext: Context,
@@ -49,7 +53,7 @@ class AppStorage @Inject constructor(
             emitAll(flow().map {
                 json.decodeFromString(Prefs.serializer(), it)
             })
-        }
+        }.distinctUntilChanged()
     }
 
     override suspend fun updateDarkMode(enabled: Boolean) {
