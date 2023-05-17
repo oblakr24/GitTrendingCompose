@@ -1,0 +1,93 @@
+package com.rokoblak.gittrendingcompose.service
+
+import android.content.Context
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStoreFile
+import com.rokoblak.gittrendingcompose.service.PersistedStorage.*
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.serialization.json.Json
+import javax.inject.Inject
+import javax.inject.Singleton
+
+interface PersistedStorage {
+    fun prefsFlow(): Flow<Prefs>
+
+    suspend fun updateDarkMode(enabled: Boolean)
+
+    @kotlinx.serialization.Serializable
+    data class Prefs(
+        val darkMode: Boolean?
+    )
+}
+
+@Singleton
+class AppStorage @Inject constructor(
+    @ApplicationContext appContext: Context,
+    private val json: Json
+) : PersistedStorage {
+
+    private val store = PreferenceDataStoreFactory.create(
+        produceFile = {
+            appContext.preferencesDataStoreFile("prefs_store")
+        }
+    )
+
+    override fun prefsFlow(): Flow<Prefs> {
+        return flow {
+            ensurePopulated()
+            emitAll(flow().map {
+                json.decodeFromString(Prefs.serializer(), it)
+            })
+        }
+    }
+
+    override suspend fun updateDarkMode(enabled: Boolean) {
+        update {
+            copy(darkMode = enabled)
+        }
+    }
+
+    private suspend fun ensurePopulated() {
+        if (!isKeyStored()) {
+            defaultSettings.store()
+        }
+    }
+
+    private suspend fun Prefs.store() {
+        store.edit {
+            it[KEY_SETTINGS] = json.encodeToString(Prefs.serializer(), this)
+        }
+    }
+
+    private suspend fun update(block: suspend Prefs.() -> Prefs) {
+        ensurePopulated()
+        val encoded = retrieve() ?: return
+        val current = json.decodeFromString(Prefs.serializer(), encoded)
+        val new = block(current)
+        new.store()
+    }
+
+    private suspend fun isKeyStored() = store.data.firstOrNull()?.contains(KEY_SETTINGS) ?: false
+
+    private suspend fun retrieve(): String? {
+        return store.data.firstOrNull()?.get(KEY_SETTINGS)
+    }
+
+    private fun flow() = store.data.mapNotNull { it[KEY_SETTINGS] }
+
+    companion object {
+        private val KEY_SETTINGS = stringPreferencesKey("settings")
+
+        val defaultSettings = Prefs(
+            darkMode = null,
+        )
+    }
+}

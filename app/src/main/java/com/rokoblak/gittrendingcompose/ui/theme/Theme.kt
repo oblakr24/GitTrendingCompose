@@ -39,7 +39,8 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun GitTrendingComposeTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    overrideDarkMode: Boolean? = null,
+    darkTheme: Boolean = overrideDarkMode ?: isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
