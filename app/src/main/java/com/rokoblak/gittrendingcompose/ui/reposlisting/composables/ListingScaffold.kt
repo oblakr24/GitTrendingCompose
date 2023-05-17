@@ -83,8 +83,8 @@ fun ListingScaffold(
                 }
             })
             Box(Modifier.pullRefresh(pullRefreshState)) {
-                GitReposListing(state.innerContent) {
-                    onAction(ListingAction.NextPageTriggerReached)
+                GitReposListing(state.innerContent) { action ->
+                    onAction(action)
                 }
                 PullRefreshIndicator(
                     refreshing,

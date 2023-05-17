@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">GitTrendingCompose</string>
 
+    <string name="general_retry">Retry</string>
+    <string name="error_no_connection">No connection</string>
+    <string name="error_generic">Something went wrong…</string>
+    <string name="error_no_connection_desc">An alien is probably blocking your signal</string>
+    <string name="error_generic_desc">API Error</string>
+
     <string name="appbar_title">Trending</string>
 
     <string name="drawer_title">Some description goes here</string>

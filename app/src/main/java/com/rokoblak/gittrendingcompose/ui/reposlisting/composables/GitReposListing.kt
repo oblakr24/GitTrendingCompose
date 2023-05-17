@@ -25,7 +25,9 @@ sealed interface GitReposListingData {
 fun GitReposListing(data: GitReposListingData, onAction: (ListingAction) -> Unit) {
     when (data) {
         is GitReposListingData.Error -> {
-            // TODO: Show error cell
+            ErrorCell(isNoConnection = data.isNoConnection) {
+                onAction(ListingAction.RefreshTriggered)
+            }
         }
         GitReposListingData.Initial -> {
             Column(modifier = Modifier.fillMaxSize()) {
