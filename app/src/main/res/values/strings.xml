@@ -9,7 +9,12 @@
 
     <string name="appbar_title">Trending</string>
 
-    <string name="drawer_title">Some description goes here</string>
+    <string name="drawer_title">A demo app displaying the trending git repositories, sorted by the number of stars descending.
+        \n\nThe app will load pages automatically once the user scrolls far enough (close enough to the last item).
+        \n\nThe items are loaded into a database and restored or refreshed depending on user action or their age.
+        \n\nThe language colors are arbitrarily chosen (to roughly match git\'s own color scheme) since the default response does not return that information.
+        \n\nDark mode initially follows system setting and is persisted in case user changes the toggle state.
+    </string>
 
     <string name="dark_mode">Dark Mode</string>
 </resources>
