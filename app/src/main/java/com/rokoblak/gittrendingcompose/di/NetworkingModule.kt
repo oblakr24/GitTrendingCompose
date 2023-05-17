@@ -1,12 +1,15 @@
 package com.rokoblak.gittrendingcompose.di
 
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -35,5 +38,18 @@ class NetworkingModule {
             encodeDefaults = true // Default parameters are still encoded
             explicitNulls = false // Nulls are not encoded. Decode absent values into nulls if no default set.
         }
+    }
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(
+        client: OkHttpClient,
+        json: Json,
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://api.github.com")
+            .client(client)
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .build()
     }
 }
