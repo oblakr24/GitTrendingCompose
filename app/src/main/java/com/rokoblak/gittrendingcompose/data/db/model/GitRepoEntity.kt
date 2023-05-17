@@ -14,6 +14,6 @@ data class GitRepoEntity(
     val lang: String?,
     val stars: Long,
     val pageIdx: Int,
-    val orderIdx: Int,
+    val orderIdx: Int, // To ensure we keep the original API's ordering when we retrieve it from the DB
     val timestampMs: Long,
 )

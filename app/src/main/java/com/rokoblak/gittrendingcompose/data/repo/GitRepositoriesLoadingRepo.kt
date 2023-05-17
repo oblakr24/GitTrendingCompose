@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import java.time.Duration
 import java.time.Instant
@@ -43,6 +42,10 @@ interface GitRepositoriesLoadingRepo {
     enum class LoadErrorType { API_ERROR, NO_CONNECTION }
 }
 
+/**
+ * A loading repository that coordinates between database and network api to perform calls,
+ * construct the state and maintain a single source of truth.
+ */
 class AppRepositoriesLoadingRepo @Inject constructor(
     private val dao: ReposDao,
     private val api: GithubApi,
@@ -55,6 +58,7 @@ class AppRepositoriesLoadingRepo @Inject constructor(
     private val loading = MutableStateFlow(false)
     private var reachedEnd = false
 
+    // Any time we collect from the current DB state, we are going to check whether we need to do the initial (re)load
     private val persistedItems = flow {
         val initial = dao.getAll()
         if (initial.isEmpty()) {
@@ -92,6 +96,7 @@ class AppRepositoriesLoadingRepo @Inject constructor(
         if (loading.value) return
         val lastItem = dbItems.value.lastOrNull()
         val lastLoadedPage = lastItem?.pageIdx
+        // We take the last item's order index so that the following items are ordered after it
         val startIdx = lastItem?.orderIdx?.let { it + 1 }
         makeLoad(lastLoadedPage?.let { it + 1 } ?: PAGE_START, startIdx ?: 0)
     }
@@ -129,10 +134,11 @@ class AppRepositoriesLoadingRepo @Inject constructor(
         loading.value = false
     }
 
-    private fun GitRepoEntity.isStale() = Instant.ofEpochMilli(timestampMs).isBefore(Instant.now().minus(DURATION_TOO_STALE))
+    // If an entity was inserted too long ago, we consider it as stale, meaning that it makes sense to refresh it from the API
+    private fun GitRepoEntity.isStale() = Instant.ofEpochMilli(timestampMs).isBefore(Instant.now().minus(AGE_TOO_STALE))
 
     companion object {
         private const val PAGE_START = 1
-        private val DURATION_TOO_STALE = Duration.ofMinutes(5)
+        private val AGE_TOO_STALE = Duration.ofMinutes(5)
     }
 }

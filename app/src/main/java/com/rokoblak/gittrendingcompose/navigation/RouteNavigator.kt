@@ -3,6 +3,10 @@ package com.rokoblak.gittrendingcompose.navigation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
+/**
+ * Flexible router setup for easy routing from the VM level.
+ * The VM can implement RouteNavigator by its Hilt-provided delegated implementation and then navigate as needed.
+ */
 interface RouteNavigator {
     fun onNavigated(state: NavigationState)
     fun navigateUp()

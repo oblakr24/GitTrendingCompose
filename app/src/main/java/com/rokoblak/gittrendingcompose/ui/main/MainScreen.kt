@@ -33,6 +33,10 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
     }
 }
 
+/**
+ * I included the initial setup for the navigation and routing, since even though this is a single-page app,
+ * it is good to set it up early so that we have a good baseline for any further additions.
+ */
 @Composable
 private fun MainNavHostContainer(navController: NavHostController) {
     NavHost(navController = navController, startDestination = ListingReposRoute.route) {
