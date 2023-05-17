@@ -14,6 +14,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,7 +38,7 @@ class ReposListingViewModel @Inject constructor(
 
             GitRepositoriesLoadingRepo.LoadResult.LoadingFirstPage -> GitReposListingData.Initial
         }
-    }
+    }.onStart { emit(GitReposListingData.Initial) }
 
     val uiState = combine(storage.prefsFlow(), listingData) { prefs, listing ->
         ListingScaffoldUIState(

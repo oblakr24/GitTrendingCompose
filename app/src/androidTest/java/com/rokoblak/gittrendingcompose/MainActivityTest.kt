@@ -1,25 +1,38 @@
 package com.rokoblak.gittrendingcompose
 
+import android.content.Context
+import android.content.res.Configuration
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsOff
+import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.filters.LargeTest
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.platform.app.InstrumentationRegistry
+import com.rokoblak.gittrendingcompose.data.db.ReposDatabase
 import com.rokoblak.gittrendingcompose.ui.reposlisting.composables.TAG_DRAWER
 import com.rokoblak.gittrendingcompose.ui.reposlisting.composables.TAG_NAV_BUTTON
+import com.rokoblak.gittrendingcompose.ui.reposlisting.composables.TAG_SWITCH_DARK_MODE
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
 /**
- * Very simple UI test that just clicks on the hamburger menu icon and asserts that the menu opens.
+ * Initial instrumentation tests covering some simple user flows, and ensuring the app starts without issue.
  */
-@RunWith(AndroidJUnit4::class)
-@LargeTest
+@HiltAndroidTest
 class MainActivityTest {
 
-    @get:Rule
+    @get:Rule(order = 0)
+    val hiltRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
+    val rule = ClearPersistedStorageRule()
+
+    @get:Rule(order = 2)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @Test
@@ -30,5 +43,37 @@ class MainActivityTest {
         }
 
         composeTestRule.onNodeWithTag(TAG_DRAWER).assertIsDisplayed()
+    }
+
+    @Test
+    fun testDarkModeIsTogglable() {
+        composeTestRule.onNodeWithTag(TAG_NAV_BUTTON).let {
+            it.assertIsDisplayed()
+            it.performClick()
+        }
+
+        composeTestRule.onNodeWithTag(TAG_DRAWER).assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag(TAG_SWITCH_DARK_MODE).let {
+            // The data is cleared after each test, but we do initialize the switch to current device dark mode state
+            val deviceInNightMode = isDeviceInNightMode()
+            if (deviceInNightMode) {
+                it.assertIsOn()
+            } else {
+                it.assertIsOff()
+            }
+            it.performClick()
+            if (deviceInNightMode) {
+                it.assertIsOff()
+            } else {
+                it.assertIsOn()
+            }
+        }
+    }
+
+    private fun isDeviceInNightMode(): Boolean {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val currentMode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        return currentMode == Configuration.UI_MODE_NIGHT_YES
     }
 }

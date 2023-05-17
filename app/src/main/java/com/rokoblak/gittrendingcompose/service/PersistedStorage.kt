@@ -1,11 +1,12 @@
 package com.rokoblak.gittrendingcompose.service
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.rokoblak.gittrendingcompose.service.PersistedStorage.*
+import com.rokoblak.gittrendingcompose.service.PersistedStorage.Prefs
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
@@ -21,6 +22,8 @@ interface PersistedStorage {
     fun prefsFlow(): Flow<Prefs>
 
     suspend fun updateDarkMode(enabled: Boolean)
+
+    suspend fun clear()
 
     @kotlinx.serialization.Serializable
     data class Prefs(
@@ -52,6 +55,12 @@ class AppStorage @Inject constructor(
     override suspend fun updateDarkMode(enabled: Boolean) {
         update {
             copy(darkMode = enabled)
+        }
+    }
+
+    override suspend fun clear() {
+        store.edit {
+            it.clear()
         }
     }
 

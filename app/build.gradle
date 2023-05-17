@@ -20,7 +20,12 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.rokoblak.gittrendingcompose.CustomTestRunner"
+
+        testOptions {
+            animationsDisabled = true
+            execution 'ANDROIDX_TEST_ORCHESTRATOR'
+        }
         vectorDrawables {
             useSupportLibrary true
         }
@@ -61,32 +66,32 @@ dependencies {
     def compose_hilt_navigation_version = "1.0.0"
     def nav_version = "2.5.3"
 
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
-    implementation 'androidx.activity:activity-compose:1.5.1'
-    implementation platform('androidx.compose:compose-bom:2022.10.00')
-    implementation 'androidx.compose.ui:ui'
-    implementation 'androidx.compose.ui:ui-graphics'
-    implementation 'androidx.compose.ui:ui-tooling-preview'
-    implementation 'androidx.compose.material3:material3'
+    androidTestUtil 'androidx.test:orchestrator:1.4.2'
+
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
 
     // Compose
     implementation "androidx.compose.ui:ui:$compose_ui_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
     implementation 'androidx.compose.material:material:1.4.3'
+    implementation 'androidx.activity:activity-compose:1.7.1'
+    implementation platform('androidx.compose:compose-bom:2022.10.00')
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation 'androidx.compose.material3:material3'
+    // Compose Navigation
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+    implementation "androidx.hilt:hilt-navigation-compose:$compose_hilt_navigation_version"
 
     // Coil
     implementation "io.coil-kt:coil-compose:2.2.2"
-
     // Room
     def room_version = "2.5.1"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
-
-    // Compose Navigation
-    implementation "androidx.navigation:navigation-compose:$nav_version"
-    implementation "androidx.hilt:hilt-navigation-compose:$compose_hilt_navigation_version"
     // Hilt
     implementation "com.google.dagger:hilt-android:2.45"
     kapt "com.google.dagger:hilt-compiler:2.45"
@@ -104,13 +109,18 @@ dependencies {
     // KotlinX immutable collections
     api "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
 
+    // Testing
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation platform('androidx.compose:compose-bom:2022.10.00')
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
+    // For instrumented tests.
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.44.2'
+    // ...with Kotlin.
+    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.44'
 
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
     implementation "androidx.tracing:tracing:1.1.0"

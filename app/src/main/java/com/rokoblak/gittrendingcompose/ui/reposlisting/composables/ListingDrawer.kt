@@ -30,6 +30,7 @@ import com.rokoblak.gittrendingcompose.ui.theme.GitTrendingComposeTheme
 import com.rokoblak.gittrendingcompose.ui.theme.alpha
 
 const val TAG_DRAWER = "tag-drawer"
+const val TAG_SWITCH_DARK_MODE = "tag-switch-dark-mode"
 
 data class ListingDrawerUIState(
     val darkMode: Boolean?,
@@ -77,6 +78,7 @@ fun ListingDrawer(
 
                 Spacer(Modifier.width(12.dp))
                 Switch(
+                    modifier = Modifier.semantics { testTag = TAG_SWITCH_DARK_MODE },
                     checked = state.darkMode ?: isSystemInDarkTheme(),
                     colors = SwitchDefaults.colors(),
                     onCheckedChange = { enabled ->
