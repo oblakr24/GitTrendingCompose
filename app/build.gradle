@@ -5,6 +5,8 @@ plugins {
     id 'kotlin-kapt'
 
     id 'com.google.dagger.hilt.android'
+
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.0'
 }
 
 android {
@@ -69,6 +71,15 @@ dependencies {
     // Hilt
     implementation "com.google.dagger:hilt-android:2.45"
     kapt "com.google.dagger:hilt-compiler:2.45"
+    // Datastore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    // Java8 desugaring
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
+    // KotlinX Serialization
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0"
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
