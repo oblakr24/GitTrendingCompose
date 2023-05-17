@@ -2,6 +2,7 @@ package com.rokoblak.gittrendingcompose.data.repo
 
 import com.rokoblak.gittrendingcompose.data.domain.GitRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import javax.inject.Inject
 
 interface GitRepositoriesLoadingRepo {
@@ -27,15 +28,10 @@ interface GitRepositoriesLoadingRepo {
 class AppRepositoriesLoadingRepo @Inject constructor(
 
 ) : GitRepositoriesLoadingRepo {
-    override val loadResults: Flow<GitRepositoriesLoadingRepo.LoadResult>
-        get() = TODO("Not yet implemented")
+    override val loadResults: Flow<GitRepositoriesLoadingRepo.LoadResult> = emptyFlow()
 
-    override suspend fun loadNext() {
-        TODO("Not yet implemented")
-    }
+    override suspend fun loadNext() = Unit
 
-    override suspend fun reload() {
-        TODO("Not yet implemented")
-    }
+    override suspend fun reload() = Unit
 
 }

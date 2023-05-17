@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">GitTrendingCompose</string>
+
+    <string name="appbar_title">Trending</string>
+
+    <string name="drawer_title">Some description goes here</string>
+
+    <string name="dark_mode">Dark Mode</string>
 </resources>
