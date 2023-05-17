@@ -26,6 +26,7 @@ class MainViewModelTest {
         val storage = object : PersistedStorage {
             override fun prefsFlow(): Flow<PersistedStorage.Prefs> = flowOf(PersistedStorage.Prefs(darkMode = true))
             override suspend fun updateDarkMode(enabled: Boolean) = Unit
+            override suspend fun clear() = Unit
         }
 
         val vm = MainViewModel(storage)

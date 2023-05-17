@@ -2,7 +2,7 @@ package com.rokoblak.gittrendingcompose.data.repo
 
 import com.rokoblak.gittrendingcompose.data.domain.GitRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 interface GitRepositoriesLoadingRepo {
@@ -28,7 +28,23 @@ interface GitRepositoriesLoadingRepo {
 class AppRepositoriesLoadingRepo @Inject constructor(
 
 ) : GitRepositoriesLoadingRepo {
-    override val loadResults: Flow<GitRepositoriesLoadingRepo.LoadResult> = emptyFlow()
+    override val loadResults: Flow<GitRepositoriesLoadingRepo.LoadResult> = flowOf(
+        GitRepositoriesLoadingRepo.LoadResult.Loaded(
+            loadedItems = (0..20).map {
+                GitRepository(
+                    id = it.toLong(),
+                    name = "name $it",
+                    desc = "desc $it",
+                    authorImgUrl = null,
+                    authorName = "Author $it",
+                    lang = "lang $it",
+                    stars = it.toLong(),
+                    pageIdx = 1,
+                )
+            },
+            loadingMore = false,
+        )
+    )
 
     override suspend fun loadNext() = Unit
 
