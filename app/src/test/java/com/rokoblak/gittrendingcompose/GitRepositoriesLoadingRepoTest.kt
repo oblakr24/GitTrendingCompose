@@ -12,6 +12,7 @@ import com.rokoblak.gittrendingcompose.util.TestCoroutineRule
 import com.rokoblak.gittrendingcompose.util.awaitState
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -99,6 +100,7 @@ class GitRepositoriesLoadingRepoTest {
             override val connected: StateFlow<Boolean> = MutableStateFlow(true)
         }
 
+        // Given that we have some initial data (which is not stale)
         val dbState = listOf(mockDbItem)
         coEvery { dao.getAll() } returns dbState
         coEvery { dao.getAllFlow() } returns flowOf(dbState)
@@ -107,6 +109,7 @@ class GitRepositoriesLoadingRepoTest {
 
         val firstResult = repo.loadResults.first()
 
+        // Then we expect to get the loaded result without any api call being made
         coVerify(exactly = 1) { dao.getAll() }
         coVerify(exactly = 1) { dao.getAllFlow() }
         coVerify(exactly = 0) { api.searchRepositories(any()) }
@@ -134,6 +137,7 @@ class GitRepositoriesLoadingRepoTest {
             override val connected: StateFlow<Boolean> = MutableStateFlow(true)
         }
 
+        // Given that we have some initial data but it is stale
         val staleItem = mockDbItem.copy(timestampMs = Instant.now().minus(Duration.ofDays(1)).toEpochMilli())
         val dbState = listOf(staleItem)
         coEvery { dao.getAll() } returns dbState
@@ -146,6 +150,7 @@ class GitRepositoriesLoadingRepoTest {
 
         val firstResult = repo.loadResults.first()
 
+        // Then we expect that we make an api call to refresh it, and delete the previous data
         coVerify(exactly = 1) { dao.getAll() }
         coVerify(exactly = 1) { dao.getAllFlow() }
         coVerify(exactly = 1) { api.searchRepositories(any()) }
@@ -167,19 +172,69 @@ class GitRepositoriesLoadingRepoTest {
     }
 
     @Test
+    fun testNoNetworkReturnsCorrectData() = coroutineTestRule.runTest {
+        val dao: ReposDao = mockk()
+        val api: GithubApi = mockk()
+        val networkMonitor: NetworkMonitor = mockk()
+
+        // Given that we have no network and no stored data
+        val dbFlow = MutableStateFlow<List<GitRepoEntity>>(emptyList())
+        every { networkMonitor.connected } returns MutableStateFlow(false)
+        coEvery { dao.getAll() } returns emptyList()
+        coEvery { dao.getAllFlow() } returns dbFlow
+        coEvery { dao.deleteAll() } returns Unit
+
+        val repo = AppRepositoriesLoadingRepo(dao = dao, api = api, networkMonitor = networkMonitor)
+
+        val firstResult = repo.loadResults.first()
+
+        // Then we expect to get an error, without any api call being made
+        coVerify(exactly = 1) { dao.getAll() }
+        coVerify(exactly = 1) { dao.getAllFlow() }
+        coVerify(exactly = 0) { api.searchRepositories(any()) }
+        coVerify(exactly = 1) { dao.deleteAll() }
+        coVerify(exactly = 0) { dao.insertAll(any()) }
+
+        assertEquals(GitRepositoriesLoadingRepo.LoadResult.LoadError(GitRepositoriesLoadingRepo.LoadErrorType.NO_CONNECTION), firstResult)
+
+        // Given that we then get the network back and we reload
+        val dbState = listOf(mockDbItem)
+        dbFlow.value = dbState
+        coEvery { dao.getAll() } returns dbState
+        every { networkMonitor.connected } returns MutableStateFlow(true)
+        coEvery { dao.insertAll(any()) } returns Unit
+        coEvery { api.searchRepositories(any()) } returns Response.success(GithubSearchResponse(total_count = 0, items = listOf(mockItem)))
+
+        repo.reload()
+
+        // Then we expect to get the loaded result with a call being made and the items inserted
+        coVerify(exactly = 1) { api.searchRepositories(any()) }
+        coVerify(exactly = 1) { dao.insertAll(any()) }
+
+        val secondResult = repo.loadResults.awaitState { it != firstResult }
+        assertEquals(GitRepositoriesLoadingRepo.LoadResult.Loaded(listOf(
+            GitRepository(
+                id = 1,
+                name = "n1",
+                desc = "desc1",
+                authorImgUrl = null,
+                authorName = "login1",
+                lang = null,
+                stars = 1,
+                pageIdx = 1,
+            )
+        ), loadingMore = false), secondResult)
+    }
+
+    @Test
     fun testReload() = coroutineTestRule.runTest {
         val dao = object : ReposDao {
-
             val flow = MutableStateFlow<List<GitRepoEntity>>(emptyList())
-
             override suspend fun getAll(): List<GitRepoEntity> = flow.value
-
             override fun getAllFlow(): Flow<List<GitRepoEntity>> = flow
-
             override suspend fun insertAll(repos: List<GitRepoEntity>) {
                 flow.value = repos
             }
-
             override suspend fun deleteAll() {
                 flow.value = emptyList()
             }
@@ -187,12 +242,13 @@ class GitRepositoriesLoadingRepoTest {
 
         val api: GithubApi = mockk()
 
-        val networkMonitor = object : NetworkMonitor {
+        val networkMonitor: NetworkMonitor = object : NetworkMonitor {
             override val connected: StateFlow<Boolean> = MutableStateFlow(true)
         }
 
         val repo = AppRepositoriesLoadingRepo(dao = dao, api = api, networkMonitor = networkMonitor)
 
+        // Given that we have a success response
         coEvery { api.searchRepositories(any()) } returns Response.success(
             GithubSearchResponse(
                 total_count = 0,
@@ -201,7 +257,8 @@ class GitRepositoriesLoadingRepoTest {
         )
         val firstResult = repo.loadResults.first()
 
-        val expected = GitRepositoriesLoadingRepo.LoadResult.Loaded(
+        // Then we expect to see it returned
+        assertEquals(GitRepositoriesLoadingRepo.LoadResult.Loaded(
             listOf(
                 GitRepository(
                     id = 1,
@@ -214,10 +271,9 @@ class GitRepositoriesLoadingRepoTest {
                     pageIdx = 1
                 )
             ), false
-        )
+        ), firstResult)
 
-        assertEquals(expected, firstResult)
-
+        // Given that a new call would return a different response
         coEvery { api.searchRepositories(any()) } returns Response.success(
             GithubSearchResponse(
                 total_count = 0,
@@ -228,6 +284,7 @@ class GitRepositoriesLoadingRepoTest {
         repo.reload()
         val nextResult = repo.loadResults.awaitState { it != firstResult }
 
+        // Then we expect to get an updated result returned
         val expectedAfter = GitRepositoriesLoadingRepo.LoadResult.Loaded(
             listOf(
                 GitRepository(

@@ -46,7 +46,7 @@ interface GitRepositoriesLoadingRepo {
 class AppRepositoriesLoadingRepo @Inject constructor(
     private val dao: ReposDao,
     private val api: GithubApi,
-    networkMonitor: NetworkMonitor,
+    private val networkMonitor: NetworkMonitor,
 ) : GitRepositoriesLoadingRepo {
 
     private val repoScope = CoroutineScope(Dispatchers.Main + Job())
@@ -76,13 +76,13 @@ class AppRepositoriesLoadingRepo @Inject constructor(
         loading
     ) { entities, connected, error, loading ->
         when {
+            !connected && entities.isEmpty() -> LoadResult.LoadError(LoadErrorType.NO_CONNECTION)
             error != null -> LoadResult.LoadError(error)
             entities.isNotEmpty() -> LoadResult.Loaded(
                 loadedItems = entities.map { it.mapToDomain() },
                 loadingMore = !reachedEnd && loading,
             )
 
-            !connected -> LoadResult.LoadError(LoadErrorType.NO_CONNECTION)
             else -> LoadResult.LoadingFirstPage
         }
     }
@@ -104,6 +104,10 @@ class AppRepositoriesLoadingRepo @Inject constructor(
     }
 
     private suspend fun makeLoad(page: Int, startIdx: Int) {
+        if (!networkMonitor.connected.value) {
+            errored.value = LoadErrorType.NO_CONNECTION
+            return
+        }
         loading.value = true
         try {
             val resp = api.searchRepositories(page = page)
