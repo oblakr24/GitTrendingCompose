@@ -4,8 +4,8 @@ import com.rokoblak.gittrendingcompose.data.repo.AppRepositoriesLoadingRepo
 import com.rokoblak.gittrendingcompose.data.repo.GitRepositoriesLoadingRepo
 import com.rokoblak.gittrendingcompose.service.AppStorage
 import com.rokoblak.gittrendingcompose.service.PersistedStorage
-import com.rokoblak.gittrendingcompose.util.AppNetworkMonitor
-import com.rokoblak.gittrendingcompose.util.NetworkMonitor
+import com.rokoblak.gittrendingcompose.service.AppNetworkMonitor
+import com.rokoblak.gittrendingcompose.service.NetworkMonitor
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

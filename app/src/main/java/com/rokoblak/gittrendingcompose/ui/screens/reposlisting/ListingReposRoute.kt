@@ -1,8 +1,8 @@
-package com.rokoblak.gittrendingcompose.ui.reposlisting
+package com.rokoblak.gittrendingcompose.ui.screens.reposlisting
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.rokoblak.gittrendingcompose.navigation.NavRoute
+import com.rokoblak.gittrendingcompose.ui.navigation.NavRoute
 
 object ListingReposRoute : NavRoute<ReposListingViewModel> {
 

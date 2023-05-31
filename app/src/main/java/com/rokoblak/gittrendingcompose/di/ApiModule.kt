@@ -1,6 +1,6 @@
 package com.rokoblak.gittrendingcompose.di
 
-import com.rokoblak.gittrendingcompose.data.api.GithubApi
+import com.rokoblak.gittrendingcompose.service.api.GithubApi
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable

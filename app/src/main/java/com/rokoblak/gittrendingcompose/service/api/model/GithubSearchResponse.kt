@@ -1,4 +1,4 @@
-package com.rokoblak.gittrendingcompose.data.api.model
+package com.rokoblak.gittrendingcompose.service.api.model
 
 import kotlinx.serialization.Serializable
 

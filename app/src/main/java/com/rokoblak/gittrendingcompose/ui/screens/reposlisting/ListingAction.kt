@@ -1,4 +1,4 @@
-package com.rokoblak.gittrendingcompose.ui.reposlisting
+package com.rokoblak.gittrendingcompose.ui.screens.reposlisting
 
 
 sealed interface ListingAction {

@@ -1,4 +1,4 @@
-package com.rokoblak.gittrendingcompose.ui.reposlisting.composables
+package com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables
 
 
 import androidx.compose.material.icons.Icons

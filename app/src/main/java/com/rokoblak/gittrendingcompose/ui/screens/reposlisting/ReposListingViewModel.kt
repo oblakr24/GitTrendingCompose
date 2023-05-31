@@ -1,14 +1,14 @@
-package com.rokoblak.gittrendingcompose.ui.reposlisting
+package com.rokoblak.gittrendingcompose.ui.screens.reposlisting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rokoblak.gittrendingcompose.data.repo.GitRepositoriesLoadingRepo
-import com.rokoblak.gittrendingcompose.navigation.RouteNavigator
+import com.rokoblak.gittrendingcompose.ui.navigation.RouteNavigator
 import com.rokoblak.gittrendingcompose.service.PersistedStorage
-import com.rokoblak.gittrendingcompose.ui.reposlisting.ReposListingUIMapper.toDisplay
-import com.rokoblak.gittrendingcompose.ui.reposlisting.composables.GitReposListingData
-import com.rokoblak.gittrendingcompose.ui.reposlisting.composables.ListingDrawerUIState
-import com.rokoblak.gittrendingcompose.ui.reposlisting.composables.ListingScaffoldUIState
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.ReposListingUIMapper.toDisplay
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables.GitReposListingData
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables.ListingDrawerUIState
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables.ListingScaffoldUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow

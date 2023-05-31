@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import com.rokoblak.gittrendingcompose.ui.main.MainScreen
-import com.rokoblak.gittrendingcompose.ui.main.MainViewModel
+import com.rokoblak.gittrendingcompose.ui.screens.main.MainScreen
+import com.rokoblak.gittrendingcompose.ui.screens.main.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

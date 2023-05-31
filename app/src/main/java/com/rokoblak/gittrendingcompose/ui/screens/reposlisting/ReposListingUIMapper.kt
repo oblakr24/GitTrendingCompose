@@ -1,9 +1,9 @@
-package com.rokoblak.gittrendingcompose.ui.reposlisting
+package com.rokoblak.gittrendingcompose.ui.screens.reposlisting
 
 
 import androidx.compose.ui.graphics.Color
 import com.rokoblak.gittrendingcompose.data.domain.GitRepository
-import com.rokoblak.gittrendingcompose.ui.reposlisting.composables.RepoDisplayData
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables.RepoDisplayData
 
 object ReposListingUIMapper {
 

@@ -1,12 +1,12 @@
-package com.rokoblak.gittrendingcompose.ui.reposlisting
+package com.rokoblak.gittrendingcompose.ui.screens.reposlisting
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.rokoblak.gittrendingcompose.ui.reposlisting.composables.GitReposListingData
-import com.rokoblak.gittrendingcompose.ui.reposlisting.composables.ListingDrawerUIState
-import com.rokoblak.gittrendingcompose.ui.reposlisting.composables.ListingScaffold
-import com.rokoblak.gittrendingcompose.ui.reposlisting.composables.ListingScaffoldUIState
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables.GitReposListingData
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables.ListingDrawerUIState
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables.ListingScaffold
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables.ListingScaffoldUIState
 
 @Composable
 fun ReposListingScreen(viewModel: ReposListingViewModel = hiltViewModel()) {

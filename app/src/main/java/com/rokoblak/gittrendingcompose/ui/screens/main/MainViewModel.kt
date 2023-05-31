@@ -1,4 +1,4 @@
-package com.rokoblak.gittrendingcompose.ui.main
+package com.rokoblak.gittrendingcompose.ui.screens.main
 
 import androidx.lifecycle.ViewModel
 import com.rokoblak.gittrendingcompose.service.PersistedStorage

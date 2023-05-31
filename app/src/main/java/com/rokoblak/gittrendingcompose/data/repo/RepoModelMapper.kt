@@ -1,6 +1,6 @@
 package com.rokoblak.gittrendingcompose.data.repo
 
-import com.rokoblak.gittrendingcompose.data.api.model.GithubSearchResponse
+import com.rokoblak.gittrendingcompose.service.api.model.GithubSearchResponse
 import com.rokoblak.gittrendingcompose.data.db.model.GitRepoEntity
 import com.rokoblak.gittrendingcompose.data.domain.GitRepository
 import java.time.Instant

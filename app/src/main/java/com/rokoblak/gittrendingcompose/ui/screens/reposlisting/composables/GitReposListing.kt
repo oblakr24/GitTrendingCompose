@@ -1,4 +1,4 @@
-package com.rokoblak.gittrendingcompose.ui.reposlisting.composables
+package com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
@@ -11,13 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.rokoblak.gittrendingcompose.ui.common.verticalScrollbar
-import com.rokoblak.gittrendingcompose.ui.reposlisting.ListingAction
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.ListingAction
 import kotlinx.collections.immutable.ImmutableList
 
 sealed interface GitReposListingData {
     object Initial: GitReposListingData
     data class Error(val isNoConnection: Boolean): GitReposListingData
-    data class Loaded(val items: ImmutableList<RepoDisplayData>, val showLoadingAtEnd: Boolean): GitReposListingData
+    data class Loaded(val items: ImmutableList<RepoDisplayData>, val showLoadingAtEnd: Boolean):
+        GitReposListingData
 }
 
 @OptIn(ExperimentalFoundationApi::class)

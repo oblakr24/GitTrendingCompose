@@ -1,17 +1,18 @@
 package com.rokoblak.gittrendingcompose
 
+import app.cash.turbine.test
 import com.rokoblak.gittrendingcompose.data.repo.GitRepositoriesLoadingRepo
 import com.rokoblak.gittrendingcompose.data.repo.GitRepositoriesLoadingRepo.*
 import com.rokoblak.gittrendingcompose.data.repo.GitRepositoriesLoadingRepo.LoadResult.LoadingFirstPage
 import com.rokoblak.gittrendingcompose.service.PersistedStorage
-import com.rokoblak.gittrendingcompose.ui.reposlisting.ListingAction
-import com.rokoblak.gittrendingcompose.ui.reposlisting.ReposListingViewModel
-import com.rokoblak.gittrendingcompose.ui.reposlisting.composables.GitReposListingData
-import com.rokoblak.gittrendingcompose.ui.reposlisting.composables.ListingDrawerUIState
-import com.rokoblak.gittrendingcompose.ui.reposlisting.composables.ListingScaffoldUIState
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.ListingAction
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.ReposListingViewModel
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables.GitReposListingData
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables.ListingDrawerUIState
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables.ListingScaffoldUIState
 import com.rokoblak.gittrendingcompose.util.TestCoroutineRule
 import com.rokoblak.gittrendingcompose.util.TestUtils
-import com.rokoblak.gittrendingcompose.util.awaitState
+import com.rokoblak.gittrendingcompose.util.awaitItem
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -22,7 +23,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import org.junit.Rule
@@ -54,10 +54,11 @@ class ListingViewModelTest {
 
         val vm = ReposListingViewModel(routeNavigator = TestUtils.emptyNavigator, repo = repo, storage = storage)
 
-        val initialState = vm.uiState.first()
-
         val expected  = ListingScaffoldUIState(ListingDrawerUIState(darkMode = true), GitReposListingData.Initial)
-        assertEquals(expected, initialState)
+        vm.uiState.test {
+            assertEquals(expected, this.awaitItem())
+            awaitComplete()
+        }
     }
 
     @Test
@@ -88,21 +89,20 @@ class ListingViewModelTest {
 
         val vm = ReposListingViewModel(routeNavigator = TestUtils.emptyNavigator, repo = repo, storage = storage)
 
-        val initialState = vm.uiState.first()
+        vm.uiState.test {
+            val expectedDrawerState = ListingDrawerUIState(darkMode = true)
+            val expected  = ListingScaffoldUIState(expectedDrawerState, GitReposListingData.Initial)
+            assertEquals(expected, awaitItem())
 
-        val expectedDrawerState = ListingDrawerUIState(darkMode = true)
+            val expectedError  = ListingScaffoldUIState(expectedDrawerState, GitReposListingData.Error(isNoConnection = true))
 
-        val expected  = ListingScaffoldUIState(expectedDrawerState, GitReposListingData.Initial)
-        assertEquals(expected, initialState)
+            assertEquals(expectedError, awaitItem { it.innerContent != GitReposListingData.Initial })
 
-        val expectedError  = ListingScaffoldUIState(expectedDrawerState, GitReposListingData.Error(isNoConnection = true))
-        assertEquals(expectedError, vm.uiState.awaitState { it.innerContent != GitReposListingData.Initial })
+            vm.onAction(ListingAction.RefreshTriggered)
 
-        vm.onAction(ListingAction.RefreshTriggered)
-
-        val expectedAfterRefresh  = ListingScaffoldUIState(expectedDrawerState, GitReposListingData.Loaded(
-            persistentListOf(), false))
-        assertEquals(expectedAfterRefresh, vm.uiState.awaitState { it.innerContent is GitReposListingData.Loaded })
+            val expectedAfterRefresh  = ListingScaffoldUIState(expectedDrawerState, GitReposListingData.Loaded(persistentListOf(), false))
+            assertEquals(expectedAfterRefresh, awaitItem { it.innerContent is GitReposListingData.Loaded })
+        }
     }
 
     @Test
@@ -117,18 +117,20 @@ class ListingViewModelTest {
 
         val vm = ReposListingViewModel(routeNavigator = TestUtils.emptyNavigator, repo = repo, storage = storage)
 
-        val initialState = vm.uiState.first()
+        vm.uiState.test {
 
-        val expected  = ListingScaffoldUIState(ListingDrawerUIState(darkMode = null), GitReposListingData.Initial)
-        assertEquals(expected, initialState)
+            val expected  = ListingScaffoldUIState(ListingDrawerUIState(darkMode = null), GitReposListingData.Initial)
+            val initialState = awaitItem()
+            assertEquals(expected, initialState)
 
-        coEvery { storage.updateDarkMode(true) } returns Unit
-        prefsFlow.value = PersistedStorage.Prefs(darkMode = true)
-        vm.onAction(ListingAction.SetDarkMode(true))
+            coEvery { storage.updateDarkMode(true) } returns Unit
+            prefsFlow.value = PersistedStorage.Prefs(darkMode = true)
+            vm.onAction(ListingAction.SetDarkMode(true))
 
-        val updatedState = vm.uiState.awaitState { it != initialState }
+            val updatedState = awaitItem { it != initialState }
 
-        val expectedUpdated  = ListingScaffoldUIState(ListingDrawerUIState(darkMode = true), GitReposListingData.Initial)
-        assertEquals(expectedUpdated, updatedState)
+            val expectedUpdated  = ListingScaffoldUIState(ListingDrawerUIState(darkMode = true), GitReposListingData.Initial)
+            assertEquals(expectedUpdated, updatedState)
+        }
     }
 }

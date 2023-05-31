@@ -11,9 +11,9 @@ import androidx.compose.ui.test.performClick
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
 import com.rokoblak.gittrendingcompose.data.db.ReposDatabase
-import com.rokoblak.gittrendingcompose.ui.reposlisting.composables.TAG_DRAWER
-import com.rokoblak.gittrendingcompose.ui.reposlisting.composables.TAG_NAV_BUTTON
-import com.rokoblak.gittrendingcompose.ui.reposlisting.composables.TAG_SWITCH_DARK_MODE
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables.TAG_DRAWER
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables.TAG_NAV_BUTTON
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables.TAG_SWITCH_DARK_MODE
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After

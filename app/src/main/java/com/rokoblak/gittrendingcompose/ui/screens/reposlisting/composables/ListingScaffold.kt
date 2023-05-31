@@ -1,4 +1,4 @@
-package com.rokoblak.gittrendingcompose.ui.reposlisting.composables
+package com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.rokoblak.gittrendingcompose.ui.common.AppThemePreviews
 import com.rokoblak.gittrendingcompose.ui.common.PreviewDataUtils
-import com.rokoblak.gittrendingcompose.ui.reposlisting.ListingAction
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.ListingAction
 import com.rokoblak.gittrendingcompose.ui.theme.GitTrendingComposeTheme
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay

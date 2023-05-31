@@ -1,11 +1,15 @@
 package com.rokoblak.gittrendingcompose.util
 
-import com.rokoblak.gittrendingcompose.navigation.NavigationState
-import com.rokoblak.gittrendingcompose.navigation.RouteNavigator
+import app.cash.turbine.ReceiveTurbine
+import com.rokoblak.gittrendingcompose.ui.navigation.NavigationState
+import com.rokoblak.gittrendingcompose.ui.navigation.RouteNavigator
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.flow.transformWhile
 import kotlinx.coroutines.withTimeout
 
@@ -29,11 +33,22 @@ object TestUtils {
  * A helper to await a flow emission matching a condition. This is when we're not that interested in the exact sequence of emissions, we just want to await the right one.
  * The timeout works on a test scheduler so it passes near-instantly.
  */
-suspend fun <T> Flow<T>.awaitState(condition: (T) -> Boolean): T {
+suspend fun <T> ReceiveTurbine<T>.awaitItem(condition: (T) -> Boolean): T {
     return withTimeout(100) { // The flow should fill up near-instantly, this is just to fail the test in case there is an assertion failure
-        transformWhile { state ->
-            emit(state)
-            !condition(state)
-        }.last()
+        var matching: T?
+        do {
+            matching = this@awaitItem.awaitItem().takeIf(condition)
+        } while (matching == null)
+        matching
+    }
+}
+
+fun <T> Flow<T>.completeOnSignal(signal: Flow<Boolean>): Flow<T> {
+    return combine(this@completeOnSignal, signal) { state, cancel ->
+        state to cancel
+    }.takeWhile { (_, cancel) ->
+        !cancel
+    }.map { (state, _) ->
+        state
     }
 }

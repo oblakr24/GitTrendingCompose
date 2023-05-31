@@ -1,4 +1,4 @@
-package com.rokoblak.gittrendingcompose.navigation
+package com.rokoblak.gittrendingcompose.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

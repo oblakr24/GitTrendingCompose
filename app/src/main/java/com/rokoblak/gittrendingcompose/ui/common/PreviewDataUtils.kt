@@ -1,7 +1,7 @@
 package com.rokoblak.gittrendingcompose.ui.common
 
 import androidx.compose.ui.graphics.Color
-import com.rokoblak.gittrendingcompose.ui.reposlisting.composables.RepoDisplayData
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables.RepoDisplayData
 
 object PreviewDataUtils {
 

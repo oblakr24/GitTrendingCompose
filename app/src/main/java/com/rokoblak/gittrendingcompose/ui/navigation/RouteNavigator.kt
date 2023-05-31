@@ -1,4 +1,4 @@
-package com.rokoblak.gittrendingcompose.navigation
+package com.rokoblak.gittrendingcompose.ui.navigation
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -15,7 +15,7 @@ import org.junit.runners.model.Statement
 @ExperimentalCoroutinesApi
 class TestCoroutineRule(unconfined: Boolean = false) : TestRule {
 
-    private val testCoroutineDispatcher = if (unconfined) UnconfinedTestDispatcher() else StandardTestDispatcher()
+    val testCoroutineDispatcher = if (unconfined) UnconfinedTestDispatcher() else StandardTestDispatcher()
     private val testScope = TestScope(testCoroutineDispatcher)
 
     override fun apply(base: Statement, description: Description) = object : Statement() {

@@ -1,7 +1,7 @@
 package com.rokoblak.gittrendingcompose.di
 
-import com.rokoblak.gittrendingcompose.navigation.AppRouteNavigator
-import com.rokoblak.gittrendingcompose.navigation.RouteNavigator
+import com.rokoblak.gittrendingcompose.ui.navigation.AppRouteNavigator
+import com.rokoblak.gittrendingcompose.ui.navigation.RouteNavigator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

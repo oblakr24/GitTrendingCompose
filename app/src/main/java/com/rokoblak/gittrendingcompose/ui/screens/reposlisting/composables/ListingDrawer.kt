@@ -1,4 +1,4 @@
-package com.rokoblak.gittrendingcompose.ui.reposlisting.composables
+package com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rokoblak.gittrendingcompose.BuildConfig
 import com.rokoblak.gittrendingcompose.R
-import com.rokoblak.gittrendingcompose.ui.reposlisting.ListingAction
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.ListingAction
 import com.rokoblak.gittrendingcompose.ui.theme.GitTrendingComposeTheme
 import com.rokoblak.gittrendingcompose.ui.theme.alpha
 

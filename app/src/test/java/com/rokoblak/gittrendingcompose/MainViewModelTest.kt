@@ -1,8 +1,9 @@
 package com.rokoblak.gittrendingcompose
 
+import app.cash.turbine.test
 import com.rokoblak.gittrendingcompose.service.PersistedStorage
-import com.rokoblak.gittrendingcompose.ui.main.MainScreenUIState
-import com.rokoblak.gittrendingcompose.ui.main.MainViewModel
+import com.rokoblak.gittrendingcompose.ui.screens.main.MainScreenUIState
+import com.rokoblak.gittrendingcompose.ui.screens.main.MainViewModel
 import com.rokoblak.gittrendingcompose.util.TestCoroutineRule
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,8 +32,9 @@ class MainViewModelTest {
 
         val vm = MainViewModel(storage)
 
-        val state = vm.uiState.first()
-
-        assertEquals(MainScreenUIState(isDarkTheme = true), state)
+        vm.uiState.test {
+            assertEquals(MainScreenUIState(isDarkTheme = true), awaitItem())
+            awaitComplete()
+        }
     }
 }

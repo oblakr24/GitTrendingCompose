@@ -1,4 +1,4 @@
-package com.rokoblak.gittrendingcompose.ui.main
+package com.rokoblak.gittrendingcompose.ui.screens.main
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -10,7 +10,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.rokoblak.gittrendingcompose.ui.reposlisting.ListingReposRoute
+import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.ListingReposRoute
 import com.rokoblak.gittrendingcompose.ui.theme.GitTrendingComposeTheme
 
 data class MainScreenUIState(
