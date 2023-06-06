@@ -6,8 +6,11 @@ import com.rokoblak.gittrendingcompose.data.db.model.GitRepoEntity
 import com.rokoblak.gittrendingcompose.data.domain.GitRepository
 import com.rokoblak.gittrendingcompose.data.repo.AppRepositoriesLoadingRepo
 import com.rokoblak.gittrendingcompose.data.repo.GitRepositoriesLoadingRepo
+import com.rokoblak.gittrendingcompose.data.repo.model.LoadErrorType
 import com.rokoblak.gittrendingcompose.service.NetworkMonitor
 import com.rokoblak.gittrendingcompose.service.api.GithubApi
+import com.rokoblak.gittrendingcompose.service.api.model.GithubRepoOwner
+import com.rokoblak.gittrendingcompose.service.api.model.GithubRepoResponse
 import com.rokoblak.gittrendingcompose.service.api.model.GithubSearchResponse
 import com.rokoblak.gittrendingcompose.util.TestCoroutineRule
 import com.rokoblak.gittrendingcompose.util.awaitItem
@@ -39,7 +42,7 @@ class GitRepositoriesLoadingRepoTest {
 
     private val mockItem = GithubSearchResponse.Item(
         1L,
-        GithubSearchResponse.Item.Owner(1L, "login1", null),
+        GithubRepoOwner(1L, "login1", null),
         "n1",
         "desc1",
         stargazers_count = 1L,
@@ -72,6 +75,13 @@ class GitRepositoriesLoadingRepoTest {
         val api = object : GithubApi {
             override suspend fun searchRepositories(page: Int): Response<GithubSearchResponse> {
                 return Response.success(GithubSearchResponse(total_count = 0, items = emptyList()))
+            }
+
+            override suspend fun getRepo(
+                owner: String,
+                repo: String
+            ): Response<GithubRepoResponse> {
+                return Response.success(null)
             }
         }
 
@@ -203,7 +213,7 @@ class GitRepositoriesLoadingRepoTest {
             coVerify(exactly = 0) { dao.insertAll(any()) }
 
             assertEquals(
-                GitRepositoriesLoadingRepo.LoadResult.LoadError(GitRepositoriesLoadingRepo.LoadErrorType.NO_CONNECTION),
+                GitRepositoriesLoadingRepo.LoadResult.LoadError(LoadErrorType.NO_CONNECTION),
                 firstResult
             )
 

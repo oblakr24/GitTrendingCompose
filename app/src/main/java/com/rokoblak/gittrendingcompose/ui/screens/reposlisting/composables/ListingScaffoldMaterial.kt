@@ -69,7 +69,6 @@ private fun ListingScaffoldContent(
 ) {
     Scaffold(
         topBar = {
-            // to run the animation independently
             val coroutineScope = rememberCoroutineScope()
             ListingTopAppbar {
                 coroutineScope.launch {

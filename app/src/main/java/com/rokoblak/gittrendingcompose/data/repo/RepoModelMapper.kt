@@ -3,6 +3,8 @@ package com.rokoblak.gittrendingcompose.data.repo
 import com.rokoblak.gittrendingcompose.service.api.model.GithubSearchResponse
 import com.rokoblak.gittrendingcompose.data.db.model.GitRepoEntity
 import com.rokoblak.gittrendingcompose.data.domain.GitRepository
+import com.rokoblak.gittrendingcompose.data.domain.GitRepositoryDetails
+import com.rokoblak.gittrendingcompose.service.api.model.GithubRepoResponse
 import java.time.Instant
 
 object RepoModelMapper {
@@ -33,5 +35,15 @@ object RepoModelMapper {
         lang = lang,
         stars = stars,
         pageIdx = pageIdx,
+    )
+
+    fun GithubRepoResponse.mapToDomain() = GitRepositoryDetails(
+        id = id,
+        name = name,
+        desc = description,
+        authorName = owner.login,
+        authorImgUrl = owner.avatar_url,
+        lang = language,
+        stars = stargazers_count,
     )
 }

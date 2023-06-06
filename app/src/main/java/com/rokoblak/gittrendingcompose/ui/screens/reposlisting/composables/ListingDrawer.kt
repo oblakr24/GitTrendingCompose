@@ -52,7 +52,6 @@ fun ListingDrawer(
             modifier = Modifier.padding(12.dp),
             text = stringResource(id = R.string.drawer_title),
             style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurface,
         )
         Spacer(modifier = Modifier.height(16.dp))
         Spacer(modifier = Modifier.weight(1f))
@@ -73,7 +72,6 @@ fun ListingDrawer(
                 Text(
                     stringResource(id = R.string.dark_mode),
                     style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
                 )
 
                 Spacer(Modifier.width(12.dp))
@@ -90,7 +88,6 @@ fun ListingDrawer(
             Text(
                 text = "Version ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})",
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.height(16.dp))
         }

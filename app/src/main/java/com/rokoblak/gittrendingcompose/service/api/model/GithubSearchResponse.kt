@@ -10,17 +10,10 @@ data class GithubSearchResponse(
     @Serializable
     data class Item(
         val id: Long,
-        val owner: Owner,
+        val owner: GithubRepoOwner,
         val name: String,
         val description: String?,
         val stargazers_count: Long,
         val language: String?,
-    ) {
-        @Serializable
-        data class Owner(
-            val id: Long,
-            val login: String, // name
-            val avatar_url: String?,
-        )
-    }
+    )
 }

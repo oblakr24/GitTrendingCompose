@@ -1,6 +1,7 @@
 package com.rokoblak.gittrendingcompose.data.repo
 
 import com.rokoblak.gittrendingcompose.data.domain.GitRepository
+import com.rokoblak.gittrendingcompose.data.repo.model.LoadErrorType
 import kotlinx.coroutines.flow.Flow
 
 interface GitRepositoriesLoadingRepo {
@@ -18,6 +19,4 @@ interface GitRepositoriesLoadingRepo {
             val loadingMore: Boolean,
         ) : LoadResult
     }
-
-    enum class LoadErrorType { API_ERROR, NO_CONNECTION }
 }

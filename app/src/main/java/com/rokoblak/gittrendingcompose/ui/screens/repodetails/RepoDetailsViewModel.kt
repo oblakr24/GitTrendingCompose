@@ -1,0 +1,70 @@
+package com.rokoblak.gittrendingcompose.ui.screens.repodetails
+
+import android.annotation.SuppressLint
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.AndroidUiDispatcher
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import app.cash.molecule.RecompositionClock
+import app.cash.molecule.launchMolecule
+import com.rokoblak.gittrendingcompose.data.repo.GitRepoDetailsRepo
+import com.rokoblak.gittrendingcompose.data.repo.GitRepoDetailsRepo.*
+import com.rokoblak.gittrendingcompose.data.repo.model.LoadErrorType
+import com.rokoblak.gittrendingcompose.ui.navigation.RouteNavigator
+import com.rokoblak.gittrendingcompose.ui.screens.repodetails.composables.RepoContentUIState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class RepoDetailsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val routeNavigator: RouteNavigator,
+    private val repo: GitRepoDetailsRepo,
+) : ViewModel(), RouteNavigator by routeNavigator {
+
+    private val scope = CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
+
+    private val routeInput = RepoDetailsRoute.getIdFrom(savedStateHandle)
+
+    val uiState: StateFlow<RepoDetailsUIState> by lazy {
+        scope.launchMolecule(clock = RecompositionClock.ContextClock) {
+            RepoDetailsPresenter(repo.loadResults(Input(owner = routeInput.owner, repo = routeInput.repo)))
+        }
+    }
+
+    fun handleAction(act: RepoDetailsAction) {
+        when (act) {
+            RepoDetailsAction.RetryClicked -> {
+                viewModelScope.launch {
+                    repo.reload()
+                }
+            }
+        }
+    }
+
+    @SuppressLint("ComposableNaming")
+    @Composable
+    private fun RepoDetailsPresenter(
+        repoState: Flow<LoadResult>
+    ): RepoDetailsUIState {
+        val state = repoState.collectAsState(initial = LoadResult.Loading)
+            .value
+
+        val innerState = when (state) {
+            is LoadResult.LoadError -> RepoContentUIState.Error(isNoConnection = state.type == LoadErrorType.NO_CONNECTION)
+            is LoadResult.Loaded -> RepoContentUIState.Loaded(
+                name = state.repo.name,
+                desc = state.repo.desc ?: "-",
+            )
+            LoadResult.Loading -> RepoContentUIState.Loading
+        }
+
+        return RepoDetailsUIState(title = routeInput.repo, innerState)
+    }
+}

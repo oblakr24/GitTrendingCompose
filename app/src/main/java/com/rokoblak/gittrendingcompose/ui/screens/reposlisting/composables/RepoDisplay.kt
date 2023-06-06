@@ -78,14 +78,12 @@ fun RepoDisplay(data: RepoDisplayData, modifier: Modifier = Modifier) {
         Column(modifier = Modifier.weight(1f).padding(start = 4.dp)) {
             Text(
                 modifier = Modifier, text = data.authorName,
-                color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.labelMedium
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 modifier = Modifier,
                 text = data.name,
-                color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.labelLarge,
             )
             Spacer(modifier = Modifier.height(4.dp))
@@ -93,7 +91,6 @@ fun RepoDisplay(data: RepoDisplayData, modifier: Modifier = Modifier) {
                 modifier = Modifier,
                 text = data.desc ?: "",
                 maxLines = 2,
-                color = MaterialTheme.colorScheme.onSurface,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.labelSmall,
             )
@@ -113,7 +110,6 @@ fun RepoDisplay(data: RepoDisplayData, modifier: Modifier = Modifier) {
                     Text(
                         modifier = Modifier.padding(start = 4.dp, end = 12.dp),
                         text = data.lang ?: "",
-                        color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.labelMedium,
                     )
                 }
@@ -126,7 +122,6 @@ fun RepoDisplay(data: RepoDisplayData, modifier: Modifier = Modifier) {
                 Text(
                     modifier = Modifier.padding(4.dp),
                     text = data.stars,
-                    color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.labelMedium,
                 )
             }

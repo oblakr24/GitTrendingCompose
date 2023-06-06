@@ -10,6 +10,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.rokoblak.gittrendingcompose.ui.screens.repodetails.RepoDetailsRoute
 import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.ListingReposRoute
 import com.rokoblak.gittrendingcompose.ui.theme.GitTrendingComposeTheme
 
@@ -33,13 +34,10 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
     }
 }
 
-/**
- * I included the initial setup for the navigation and routing, since even though this is a single-page app,
- * it is good to set it up early so that we have a good baseline for any further additions.
- */
 @Composable
 private fun MainNavHostContainer(navController: NavHostController) {
     NavHost(navController = navController, startDestination = ListingReposRoute.route) {
         ListingReposRoute.register(this, navController)
+        RepoDetailsRoute.register(this, navController)
     }
 }

@@ -4,12 +4,12 @@ import com.rokoblak.gittrendingcompose.data.db.ReposDao
 import com.rokoblak.gittrendingcompose.data.db.model.GitRepoEntity
 import com.rokoblak.gittrendingcompose.data.repo.RepoModelMapper.mapToDomain
 import com.rokoblak.gittrendingcompose.data.repo.RepoModelMapper.mapToEntity
+import com.rokoblak.gittrendingcompose.data.repo.model.LoadErrorType
 import com.rokoblak.gittrendingcompose.di.MainDispatcher
 import com.rokoblak.gittrendingcompose.service.NetworkMonitor
 import com.rokoblak.gittrendingcompose.service.api.GithubApi
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,7 +35,7 @@ class AppRepositoriesLoadingRepo @Inject constructor(
 
     private val repoScope = CoroutineScope(dispatcher + Job())
 
-    private val errored = MutableStateFlow<GitRepositoriesLoadingRepo.LoadErrorType?>(null)
+    private val errored = MutableStateFlow<LoadErrorType?>(null)
     private val loading = MutableStateFlow(false)
     private var reachedEnd = false
 
@@ -62,7 +62,7 @@ class AppRepositoriesLoadingRepo @Inject constructor(
     ) { entities, connected, error, loading ->
         when {
             !connected && entities.isEmpty() -> GitRepositoriesLoadingRepo.LoadResult.LoadError(
-                GitRepositoriesLoadingRepo.LoadErrorType.NO_CONNECTION)
+                LoadErrorType.NO_CONNECTION)
             error != null -> GitRepositoriesLoadingRepo.LoadResult.LoadError(error)
             entities.isNotEmpty() -> GitRepositoriesLoadingRepo.LoadResult.Loaded(
                 loadedItems = entities.map { it.mapToDomain() },
@@ -92,7 +92,7 @@ class AppRepositoriesLoadingRepo @Inject constructor(
 
     private suspend fun makeLoad(page: Int, startIdx: Int) {
         if (!networkMonitor.connected.first()) {
-            errored.value = GitRepositoriesLoadingRepo.LoadErrorType.NO_CONNECTION
+            errored.value = LoadErrorType.NO_CONNECTION
             return
         }
         loading.value = true
@@ -107,11 +107,11 @@ class AppRepositoriesLoadingRepo @Inject constructor(
                     reachedEnd = true
                 }
             } else {
-                errored.value = GitRepositoriesLoadingRepo.LoadErrorType.API_ERROR
+                errored.value = LoadErrorType.API_ERROR
             }
         } catch (e: Throwable) {
             e.printStackTrace()
-            errored.value = GitRepositoriesLoadingRepo.LoadErrorType.API_ERROR
+            errored.value = LoadErrorType.API_ERROR
         }
         loading.value = false
     }

@@ -1,6 +1,7 @@
 package com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,14 +11,16 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.rokoblak.gittrendingcompose.ui.common.composables.ErrorCell
 import com.rokoblak.gittrendingcompose.ui.common.verticalScrollbar
+import com.rokoblak.gittrendingcompose.ui.screens.repodetails.RepoDetailsRoute
 import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.ListingAction
 import kotlinx.collections.immutable.ImmutableList
 
 sealed interface GitReposListingData {
-    object Initial: GitReposListingData
-    data class Error(val isNoConnection: Boolean): GitReposListingData
-    data class Loaded(val items: ImmutableList<RepoDisplayData>, val showLoadingAtEnd: Boolean):
+    object Initial : GitReposListingData
+    data class Error(val isNoConnection: Boolean) : GitReposListingData
+    data class Loaded(val items: ImmutableList<RepoDisplayData>, val showLoadingAtEnd: Boolean) :
         GitReposListingData
 }
 
@@ -30,14 +33,19 @@ fun GitReposListing(data: GitReposListingData, onAction: (ListingAction) -> Unit
                 onAction(ListingAction.RefreshTriggered)
             }
         }
+
         GitReposListingData.Initial -> {
             Column(modifier = Modifier.fillMaxSize()) {
                 (0..10).forEach { _ ->
                     LoadingCell()
-                    Divider(startIndent = 12.dp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f))
+                    Divider(
+                        startIndent = 12.dp,
+                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f)
+                    )
                 }
             }
         }
+
         is GitReposListingData.Loaded -> {
             val lazyListState = rememberLazyListState()
             ListingScrollTracker(
@@ -47,18 +55,32 @@ fun GitReposListing(data: GitReposListingData, onAction: (ListingAction) -> Unit
                     onAction(ListingAction.NextPageTriggerReached)
                 }
             )
-            LazyColumn(state = lazyListState, modifier = Modifier.verticalScrollbar(lazyListState)) {
+            LazyColumn(
+                state = lazyListState,
+                modifier = Modifier.verticalScrollbar(lazyListState)
+            ) {
                 items(
                     count = data.items.size,
                     key = { data.items[it].id },
                     itemContent = { idx ->
                         val item = data.items[idx]
                         RepoDisplay(
-                            modifier = Modifier.animateItemPlacement(),
+                            modifier = Modifier
+                                .animateItemPlacement()
+                                .clickable {
+                                    val input = RepoDetailsRoute.Input(
+                                        owner = item.authorName,
+                                        repo = item.name
+                                    )
+                                    onAction(ListingAction.OpenRepo(input))
+                                },
                             data = item,
                         )
                         if (idx < data.items.lastIndex) {
-                            Divider(startIndent = 12.dp, color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f))
+                            Divider(
+                                startIndent = 12.dp,
+                                color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f)
+                            )
                         }
                     }
                 )

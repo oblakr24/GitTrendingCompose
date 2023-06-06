@@ -85,6 +85,8 @@ dependencies {
     implementation 'com.valentinilk.shimmer:compose-shimmer:1.0.5'
     // Lottie for Compose
     implementation "com.airbnb.android:lottie-compose:6.0.0"
+    // Compose constraint layout
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
     // Coil
     implementation "io.coil-kt:coil-compose:2.2.2"
@@ -135,3 +137,5 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
     api "androidx.arch.core:core-testing:2.2.0"
 }
+
+apply plugin: 'app.cash.molecule'

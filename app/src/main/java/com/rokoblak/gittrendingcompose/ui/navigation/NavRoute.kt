@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -57,3 +58,8 @@ interface NavRoute<T : RouteNavigator> {
         }
     }
 }
+
+fun <T> SavedStateHandle.getOrThrow(key: String): T =
+    get<T>(key) ?: throw IllegalArgumentException(
+        "Mandatory argument $key missing in arguments."
+    )

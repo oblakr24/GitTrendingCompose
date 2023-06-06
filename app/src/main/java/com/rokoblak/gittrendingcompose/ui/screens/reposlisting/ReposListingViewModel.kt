@@ -3,8 +3,10 @@ package com.rokoblak.gittrendingcompose.ui.screens.reposlisting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rokoblak.gittrendingcompose.data.repo.GitRepositoriesLoadingRepo
-import com.rokoblak.gittrendingcompose.ui.navigation.RouteNavigator
+import com.rokoblak.gittrendingcompose.data.repo.model.LoadErrorType
 import com.rokoblak.gittrendingcompose.service.PersistedStorage
+import com.rokoblak.gittrendingcompose.ui.navigation.RouteNavigator
+import com.rokoblak.gittrendingcompose.ui.screens.repodetails.RepoDetailsRoute
 import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.ReposListingUIMapper.toDisplay
 import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables.GitReposListingData
 import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables.ListingDrawerUIState
@@ -28,7 +30,7 @@ class ReposListingViewModel @Inject constructor(
     private val listingData: Flow<GitReposListingData> = repo.loadResults.map { loadResult ->
         when (loadResult) {
             is GitRepositoriesLoadingRepo.LoadResult.LoadError -> GitReposListingData.Error(
-                isNoConnection = loadResult.type == GitRepositoriesLoadingRepo.LoadErrorType.NO_CONNECTION
+                isNoConnection = loadResult.type == LoadErrorType.NO_CONNECTION
             )
 
             is GitRepositoriesLoadingRepo.LoadResult.Loaded -> GitReposListingData.Loaded(
@@ -54,6 +56,7 @@ class ReposListingViewModel @Inject constructor(
                 ListingAction.NextPageTriggerReached -> repo.loadNext()
                 ListingAction.RefreshTriggered -> repo.reload()
                 is ListingAction.SetDarkMode -> setDarkMode(act.enabled)
+                is ListingAction.OpenRepo -> navigateToRoute(RepoDetailsRoute.get(act.input))
             }
         }
     }

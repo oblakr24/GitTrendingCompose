@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.rokoblak.gittrendingcompose.data.repo.GitRepositoriesLoadingRepo
 import com.rokoblak.gittrendingcompose.data.repo.GitRepositoriesLoadingRepo.*
 import com.rokoblak.gittrendingcompose.data.repo.GitRepositoriesLoadingRepo.LoadResult.LoadingFirstPage
+import com.rokoblak.gittrendingcompose.data.repo.model.LoadErrorType
 import com.rokoblak.gittrendingcompose.service.PersistedStorage
 import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.ListingAction
 import com.rokoblak.gittrendingcompose.ui.screens.reposlisting.ReposListingViewModel
