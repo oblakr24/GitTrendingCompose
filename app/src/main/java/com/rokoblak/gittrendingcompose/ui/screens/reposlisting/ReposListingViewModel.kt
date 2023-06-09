@@ -30,7 +30,7 @@ class ReposListingViewModel @Inject constructor(
     private val listingData: Flow<GitReposListingData> = repo.loadResults.map { loadResult ->
         when (loadResult) {
             is GitRepositoriesLoadingRepo.LoadResult.LoadError -> GitReposListingData.Error(
-                isNoConnection = loadResult.type == LoadErrorType.NO_CONNECTION
+                isNoConnection = loadResult.type == LoadErrorType.NoNetwork
             )
 
             is GitRepositoriesLoadingRepo.LoadResult.Loaded -> GitReposListingData.Loaded(

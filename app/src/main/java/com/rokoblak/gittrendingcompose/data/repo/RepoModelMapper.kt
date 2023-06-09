@@ -4,6 +4,8 @@ import com.rokoblak.gittrendingcompose.service.api.model.GithubSearchResponse
 import com.rokoblak.gittrendingcompose.data.db.model.GitRepoEntity
 import com.rokoblak.gittrendingcompose.data.domain.GitRepository
 import com.rokoblak.gittrendingcompose.data.domain.GitRepositoryDetails
+import com.rokoblak.gittrendingcompose.data.domain.RepoContentFile
+import com.rokoblak.gittrendingcompose.service.api.model.GitContentFile
 import com.rokoblak.gittrendingcompose.service.api.model.GithubRepoResponse
 import java.time.Instant
 
@@ -45,5 +47,17 @@ object RepoModelMapper {
         authorImgUrl = owner.avatar_url,
         lang = language,
         stars = stargazers_count,
+        watchers = watchers_count,
+        issues = open_issues_count,
+        licenseName = license?.name,
+        defaultBranch = default_branch,
+        visibility = visibility,
     )
+
+    fun List<GitContentFile>.mapToDomain() = map { file ->
+        RepoContentFile(
+            name = file.name,
+            type = file.type,
+        )
+    }
 }

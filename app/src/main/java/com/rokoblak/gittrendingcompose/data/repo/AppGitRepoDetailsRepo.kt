@@ -1,10 +1,17 @@
 package com.rokoblak.gittrendingcompose.data.repo
 
+import com.rokoblak.gittrendingcompose.data.domain.ExpandedGitRepositoryDetails
 import com.rokoblak.gittrendingcompose.data.repo.RepoModelMapper.mapToDomain
+import com.rokoblak.gittrendingcompose.data.repo.model.CallResult
 import com.rokoblak.gittrendingcompose.data.repo.model.LoadErrorType
+import com.rokoblak.gittrendingcompose.data.repo.model.LoadableResult
+import com.rokoblak.gittrendingcompose.data.repo.model.toLoadable
 import com.rokoblak.gittrendingcompose.service.NetworkMonitor
 import com.rokoblak.gittrendingcompose.service.api.GithubApi
+import com.rokoblak.gittrendingcompose.service.api.wrappedSafeCall
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -28,41 +35,51 @@ class AppGitRepoDetailsRepo @Inject constructor(
         load(input)
     }.flatMapLatest { loadFlow ->
         flow {
-            emit(GitRepoDetailsRepo.LoadResult.Loading)
+            emit(LoadableResult.Loading)
             emitAll(loadFlow)
         }
     }
 
-    override fun loadResults(input: GitRepoDetailsRepo.Input): Flow<GitRepoDetailsRepo.LoadResult> {
+    override fun loadResults(input: GitRepoDetailsRepo.Input): Flow<LoadableResult<ExpandedGitRepositoryDetails>> {
         return loadResults.also {
             inputs.value = input
         }
     }
 
-    private suspend fun load(input: GitRepoDetailsRepo.Input): Flow<GitRepoDetailsRepo.LoadResult> = flow {
-        emit(GitRepoDetailsRepo.LoadResult.Loading)
+    private suspend fun load(input: GitRepoDetailsRepo.Input): Flow<LoadableResult<ExpandedGitRepositoryDetails>> = flow {
+        emit(LoadableResult.Loading)
         if (!networkMonitor.connected.first()) {
-            emit(GitRepoDetailsRepo.LoadResult.LoadError(LoadErrorType.NO_CONNECTION))
+            emit(LoadableResult.Error(LoadErrorType.NoNetwork))
             return@flow
         }
-        val res = try {
-            val resp = api.getRepo(owner = input.owner, repo = input.repo)
-            val body = resp.body()
-            if (resp.isSuccessful && body != null) {
-                val mapped = body.mapToDomain()
-                GitRepoDetailsRepo.LoadResult.Loaded(mapped)
-            } else {
-                GitRepoDetailsRepo.LoadResult.LoadError(LoadErrorType.API_ERROR)
-            }
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            GitRepoDetailsRepo.LoadResult.LoadError(LoadErrorType.API_ERROR)
-        }
-        emit(res)
+        emit(loadDetails(owner = input.owner, repo = input.repo).toLoadable())
     }
 
     override suspend fun reload() {
         refreshing.value = RefreshSignal()
+    }
+
+    private suspend fun loadDetails(owner: String, repo: String) = coroutineScope {
+        val detailsCall = async {
+            api.wrappedSafeCall {
+                getRepo(owner = owner, repo = repo)
+            }.map {
+                it.mapToDomain()
+            }
+        }
+        val contentsCall = async {
+            api.wrappedSafeCall {
+                getRepoContents(owner = owner, repo = repo)
+            }.map {
+                it.mapToDomain()
+            }
+        }
+        CallResult.compose(detailsCall.await(), contentsCall.await()) { details, contents ->
+            ExpandedGitRepositoryDetails(
+                details = details,
+                contents = contents,
+            )
+        }
     }
 
     class RefreshSignal

@@ -62,7 +62,8 @@ class AppRepositoriesLoadingRepo @Inject constructor(
     ) { entities, connected, error, loading ->
         when {
             !connected && entities.isEmpty() -> GitRepositoriesLoadingRepo.LoadResult.LoadError(
-                LoadErrorType.NO_CONNECTION)
+                LoadErrorType.NoNetwork
+            )
             error != null -> GitRepositoriesLoadingRepo.LoadResult.LoadError(error)
             entities.isNotEmpty() -> GitRepositoriesLoadingRepo.LoadResult.Loaded(
                 loadedItems = entities.map { it.mapToDomain() },
@@ -92,7 +93,7 @@ class AppRepositoriesLoadingRepo @Inject constructor(
 
     private suspend fun makeLoad(page: Int, startIdx: Int) {
         if (!networkMonitor.connected.first()) {
-            errored.value = LoadErrorType.NO_CONNECTION
+            errored.value = LoadErrorType.NoNetwork
             return
         }
         loading.value = true
@@ -107,11 +108,11 @@ class AppRepositoriesLoadingRepo @Inject constructor(
                     reachedEnd = true
                 }
             } else {
-                errored.value = LoadErrorType.API_ERROR
+                errored.value = LoadErrorType.ApiError("Body is null")
             }
         } catch (e: Throwable) {
             e.printStackTrace()
-            errored.value = LoadErrorType.API_ERROR
+            errored.value = LoadErrorType.ApiError(e.message ?: "Api error")
         }
         loading.value = false
     }

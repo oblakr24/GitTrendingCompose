@@ -71,7 +71,7 @@ class ListingViewModelTest {
             override val loadResults: Flow<LoadResult> = flow {
                 emit(LoadingFirstPage)
                 delay(50)
-                emit(LoadResult.LoadError(LoadErrorType.NO_CONNECTION))
+                emit(LoadResult.LoadError(LoadErrorType.NoNetwork))
                 emitAll(flow.filterNotNull())
             }
 

@@ -10,7 +10,6 @@ import com.rokoblak.gittrendingcompose.data.repo.model.LoadErrorType
 import com.rokoblak.gittrendingcompose.service.NetworkMonitor
 import com.rokoblak.gittrendingcompose.service.api.GithubApi
 import com.rokoblak.gittrendingcompose.service.api.model.GithubRepoOwner
-import com.rokoblak.gittrendingcompose.service.api.model.GithubRepoResponse
 import com.rokoblak.gittrendingcompose.service.api.model.GithubSearchResponse
 import com.rokoblak.gittrendingcompose.util.TestCoroutineRule
 import com.rokoblak.gittrendingcompose.util.awaitItem
@@ -72,18 +71,8 @@ class GitRepositoriesLoadingRepoTest {
             override suspend fun deleteAll() = Unit
         }
 
-        val api = object : GithubApi {
-            override suspend fun searchRepositories(page: Int): Response<GithubSearchResponse> {
-                return Response.success(GithubSearchResponse(total_count = 0, items = emptyList()))
-            }
-
-            override suspend fun getRepo(
-                owner: String,
-                repo: String
-            ): Response<GithubRepoResponse> {
-                return Response.success(null)
-            }
-        }
+        val api: GithubApi = mockk()
+        coEvery { api.searchRepositories(any()) } returns Response.success(GithubSearchResponse(total_count = 0, items = emptyList()))
 
         val networkMonitor = object : NetworkMonitor {
             override val connected: StateFlow<Boolean> = MutableStateFlow(true)
@@ -213,7 +202,7 @@ class GitRepositoriesLoadingRepoTest {
             coVerify(exactly = 0) { dao.insertAll(any()) }
 
             assertEquals(
-                GitRepositoriesLoadingRepo.LoadResult.LoadError(LoadErrorType.NO_CONNECTION),
+                GitRepositoriesLoadingRepo.LoadResult.LoadError(LoadErrorType.NoNetwork),
                 firstResult
             )
 

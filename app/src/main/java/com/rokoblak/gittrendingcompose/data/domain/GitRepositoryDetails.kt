@@ -8,4 +8,9 @@ data class GitRepositoryDetails(
     val authorName: String,
     val lang: String?,
     val stars: Long,
+    val issues: Long,
+    val watchers: Long,
+    val licenseName: String?,
+    val visibility: String,
+    val defaultBranch: String,
 )

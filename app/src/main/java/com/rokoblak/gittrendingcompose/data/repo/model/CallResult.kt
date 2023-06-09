@@ -1,13 +1,18 @@
 package com.rokoblak.gittrendingcompose.data.repo.model
 
 
-sealed interface LoadResult<out T> {
-    data class Success<T>(val value: T): LoadResult<T>
-    data class Error(val type: LoadErrorType2): LoadResult<Nothing>
+sealed interface CallResult<out T> {
+    data class Success<T>(val value: T): CallResult<T>
+    data class Error(val type: LoadErrorType): CallResult<Nothing>
+
+    suspend fun <R>map(mapper: suspend (T) -> R): CallResult<R> = when (this) {
+        is Error -> this
+        is Success -> Success(mapper(value))
+    }
 
     companion object {
 
-        fun <T, K, R>compose(first: LoadResult<T>, second: LoadResult<K>, onSuccess: (T, K) -> R): LoadResult<R> {
+        fun <T, K, R>compose(first: CallResult<T>, second: CallResult<K>, onSuccess: (T, K) -> R): CallResult<R> {
             val firstValue = when (first) {
                 is Error -> return first
                 is Success -> first.value
@@ -21,7 +26,7 @@ sealed interface LoadResult<out T> {
     }
 }
 
-sealed interface LoadErrorType2 {
-    object NoNetwork: LoadErrorType2
-    data class ApiError(val message: String): LoadErrorType2
+sealed interface LoadErrorType {
+    object NoNetwork: LoadErrorType
+    data class ApiError(val message: String): LoadErrorType
 }

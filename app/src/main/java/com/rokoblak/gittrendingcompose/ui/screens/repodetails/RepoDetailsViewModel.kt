@@ -9,9 +9,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.molecule.RecompositionClock
 import app.cash.molecule.launchMolecule
+import com.rokoblak.gittrendingcompose.data.domain.ExpandedGitRepositoryDetails
 import com.rokoblak.gittrendingcompose.data.repo.GitRepoDetailsRepo
 import com.rokoblak.gittrendingcompose.data.repo.GitRepoDetailsRepo.*
 import com.rokoblak.gittrendingcompose.data.repo.model.LoadErrorType
+import com.rokoblak.gittrendingcompose.data.repo.model.LoadableResult
 import com.rokoblak.gittrendingcompose.ui.navigation.RouteNavigator
 import com.rokoblak.gittrendingcompose.ui.screens.repodetails.composables.RepoContentUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,20 +53,25 @@ class RepoDetailsViewModel @Inject constructor(
     @SuppressLint("ComposableNaming")
     @Composable
     private fun RepoDetailsPresenter(
-        repoState: Flow<LoadResult>
+        repoState: Flow<LoadableResult<ExpandedGitRepositoryDetails>>
     ): RepoDetailsUIState {
-        val state = repoState.collectAsState(initial = LoadResult.Loading)
+        val state = repoState.collectAsState(initial = LoadableResult.Loading)
             .value
 
         val innerState = when (state) {
-            is LoadResult.LoadError -> RepoContentUIState.Error(isNoConnection = state.type == LoadErrorType.NO_CONNECTION)
-            is LoadResult.Loaded -> RepoContentUIState.Loaded(
-                name = state.repo.name,
-                desc = state.repo.desc ?: "-",
-            )
-            LoadResult.Loading -> RepoContentUIState.Loading
+            is LoadableResult.Error -> RepoContentUIState.Error(isNoConnection = state.type == LoadErrorType.NoNetwork)
+            LoadableResult.Loading -> RepoContentUIState.Loading
+            is LoadableResult.Success -> state.value.createUIState()
         }
 
         return RepoDetailsUIState(title = routeInput.repo, innerState)
+    }
+
+    private fun ExpandedGitRepositoryDetails.createUIState(): RepoContentUIState.Loaded {
+        val details = details
+        return RepoContentUIState.Loaded(
+            name = details.name,
+            desc = details.desc ?: "-",
+        )
     }
 }
