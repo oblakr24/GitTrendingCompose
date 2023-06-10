@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.rokoblak.gittrendingcompose.ui.common.AppThemePreviews
 import com.rokoblak.gittrendingcompose.ui.common.PreviewDataUtils
+import com.rokoblak.gittrendingcompose.ui.common.composables.AvatarImage
 import com.rokoblak.gittrendingcompose.ui.theme.GitTrendingComposeTheme
 import com.rokoblak.gittrendingcompose.ui.theme.Gold
 
@@ -54,27 +55,7 @@ fun RepoDisplay(data: RepoDisplayData, modifier: Modifier = Modifier) {
             .padding(12.dp),
         verticalAlignment = Alignment.Top,
     ) {
-
-        if (data.authorImgUrl != null) {
-            Surface(
-                modifier = Modifier
-                    .padding(end = 12.dp)
-                    .size(36.dp),
-                color = MaterialTheme.colorScheme.background,
-                shape = CircleShape,
-                shadowElevation = 2.dp,
-            ) {
-                AsyncImage(modifier = Modifier.padding(0.dp), model = Uri.parse(data.authorImgUrl), contentDescription = null)
-            }
-        } else {
-            Box(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .size(36.dp)
-                    .background(Color.LightGray, shape = CircleShape),
-            )
-        }
-
+        AvatarImage(data.authorImgUrl)
         Column(modifier = Modifier.weight(1f).padding(start = 4.dp)) {
             Text(
                 modifier = Modifier, text = data.authorName,

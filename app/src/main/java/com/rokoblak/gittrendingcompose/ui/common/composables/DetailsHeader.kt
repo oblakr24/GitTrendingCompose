@@ -38,7 +38,7 @@ fun DetailsHeader(
     modifier: Modifier = Modifier,
     iconVector: ImageVector? = null,
     rightButtonText: String? = null,
-    background: Color = MaterialTheme.colorScheme.background,
+    background: Color = MaterialTheme.colorScheme.primaryContainer,
     onIconPressed: (() -> Unit)? = null,
     rightButtonEnabled: Boolean = true,
     rightButtonColor: Color = MaterialTheme.colorScheme.secondary,

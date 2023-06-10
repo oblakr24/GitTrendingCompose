@@ -49,6 +49,7 @@ object RepoModelMapper {
         stars = stargazers_count,
         watchers = watchers_count,
         issues = open_issues_count,
+        forks = forks_count,
         licenseName = license?.name,
         defaultBranch = default_branch,
         visibility = visibility,

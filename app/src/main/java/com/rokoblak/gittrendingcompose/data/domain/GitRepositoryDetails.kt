@@ -9,6 +9,7 @@ data class GitRepositoryDetails(
     val lang: String?,
     val stars: Long,
     val issues: Long,
+    val forks: Long,
     val watchers: Long,
     val licenseName: String?,
     val visibility: String,
