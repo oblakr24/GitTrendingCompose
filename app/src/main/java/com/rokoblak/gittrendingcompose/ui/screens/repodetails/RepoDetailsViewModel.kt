@@ -10,12 +10,14 @@ import androidx.lifecycle.viewModelScope
 import app.cash.molecule.RecompositionClock
 import app.cash.molecule.launchMolecule
 import com.rokoblak.gittrendingcompose.data.domain.ExpandedGitRepositoryDetails
+import com.rokoblak.gittrendingcompose.data.domain.GitRepositoryDetails
 import com.rokoblak.gittrendingcompose.data.repo.GitRepoDetailsRepo
 import com.rokoblak.gittrendingcompose.data.repo.GitRepoDetailsRepo.*
 import com.rokoblak.gittrendingcompose.data.repo.model.LoadErrorType
 import com.rokoblak.gittrendingcompose.data.repo.model.LoadableResult
 import com.rokoblak.gittrendingcompose.ui.navigation.RouteNavigator
 import com.rokoblak.gittrendingcompose.ui.screens.repodetails.composables.RepoContentUIState
+import com.rokoblak.gittrendingcompose.ui.screens.repodetails.composables.RepoHeaderCellData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -70,8 +72,20 @@ class RepoDetailsViewModel @Inject constructor(
     private fun ExpandedGitRepositoryDetails.createUIState(): RepoContentUIState.Loaded {
         val details = details
         return RepoContentUIState.Loaded(
-            name = details.name,
-            desc = details.desc ?: "-",
+            header = details.createHeaderData(),
+        )
+    }
+
+    private fun GitRepositoryDetails.createHeaderData(): RepoHeaderCellData {
+        return RepoHeaderCellData(
+            authorImgUrl = authorImgUrl,
+            authorName = authorName,
+            title = this.name,
+            subtitle = this.desc.orEmpty(),
+            stars = "$stars stars",
+            forks = "$forks forks",
+            issues = "$issues issues",
+            mainBranch = "Default branch: $defaultBranch",
         )
     }
 }
