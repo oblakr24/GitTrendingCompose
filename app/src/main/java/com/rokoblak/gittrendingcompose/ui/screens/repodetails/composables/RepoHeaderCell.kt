@@ -6,11 +6,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CallSplit
 import androidx.compose.material.icons.filled.ErrorOutline
@@ -68,8 +71,6 @@ fun RepoHeaderCell(data: RepoHeaderCellData) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = data.title, style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = data.subtitle, style = MaterialTheme.typography.bodyMedium)
-            Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -111,6 +112,12 @@ fun RepoHeaderCell(data: RepoHeaderCellData) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = data.mainBranch, style = MaterialTheme.typography.labelMedium)
             Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                modifier = Modifier
+                    .heightIn(0.dp, 200.dp)
+                    .verticalScroll(rememberScrollState()),
+                text = data.subtitle, style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
