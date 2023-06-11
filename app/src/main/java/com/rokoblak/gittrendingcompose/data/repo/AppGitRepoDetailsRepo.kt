@@ -8,6 +8,7 @@ import com.rokoblak.gittrendingcompose.data.repo.model.LoadableResult
 import com.rokoblak.gittrendingcompose.data.repo.model.toLoadable
 import com.rokoblak.gittrendingcompose.service.NetworkMonitor
 import com.rokoblak.gittrendingcompose.service.api.GithubApi
+import com.rokoblak.gittrendingcompose.service.api.GithubRawFilesApi
 import com.rokoblak.gittrendingcompose.service.api.wrappedSafeCall
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -25,6 +26,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 class AppGitRepoDetailsRepo @Inject constructor(
     private val api: GithubApi,
+    private val rawFilesApi: GithubRawFilesApi,
     private val networkMonitor: NetworkMonitor,
 ) : GitRepoDetailsRepo {
 
@@ -74,12 +76,30 @@ class AppGitRepoDetailsRepo @Inject constructor(
                 it.mapToDomain()
             }
         }
-        CallResult.compose(detailsCall.await(), contentsCall.await()) { details, contents ->
+        val detsAndContents = CallResult.compose(detailsCall.await(), contentsCall.await()) { details, contents ->
+            details to contents
+        }
+        val (details, contents) = when (detsAndContents) {
+            is CallResult.Error -> return@coroutineScope detsAndContents
+            is CallResult.Success -> detsAndContents.value
+        }
+
+        val rawReadme = try {
+            // TODO: can be readme.rst
+            val res = rawFilesApi.getRepoReadme(owner, repo, branch = details.defaultBranch)
+            res.body()
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            null
+        }
+
+        CallResult.Success(
             ExpandedGitRepositoryDetails(
                 details = details,
                 contents = contents,
+                rawReadme = rawReadme,
             )
-        }
+        )
     }
 
     class RefreshSignal

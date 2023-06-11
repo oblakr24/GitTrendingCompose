@@ -1,8 +1,18 @@
 package com.rokoblak.gittrendingcompose.ui.screens.repodetails.composables
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +30,7 @@ sealed interface RepoContentUIState {
     data class Error(val isNoConnection: Boolean) : RepoContentUIState
     data class Loaded(
         val header: RepoHeaderCellData,
+        val rawReadme: String?,
     ) : RepoContentUIState
 }
 
@@ -39,11 +50,29 @@ fun RepoDetailsContent(state: RepoContentUIState, onAction: (RepoDetailsAction) 
         is RepoContentUIState.Loaded -> {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top,
             ) {
                 RepoHeaderCell(data = state.header)
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                if (state.rawReadme != null) {
+                    Text(text = "Readme.MD")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight(), propagateMinConstraints = true
+                    ) {
+                        Text(text = state.rawReadme, style = MaterialTheme.typography.labelSmall)
+                    }
+                }
             }
         }
     }
@@ -56,6 +85,7 @@ private fun RepoDetailsContentPreview() {
     GitTrendingComposeTheme {
         val state = RepoContentUIState.Loaded(
             header = PreviewDataUtils.repoHeaderData,
+            rawReadme = "Raw Readme.MD file content",
         )
         RepoDetailsContent(state = state, onAction = {})
     }
