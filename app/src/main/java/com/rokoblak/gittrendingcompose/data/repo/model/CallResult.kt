@@ -10,6 +10,11 @@ sealed interface CallResult<out T> {
         is Success -> Success(mapper(value))
     }
 
+    suspend fun <R>flatMap(mapper: suspend (T) -> CallResult<R>): CallResult<R> = when (this) {
+        is Error -> this
+        is Success -> mapper(value)
+    }
+
     companion object {
 
         fun <T, K, R>compose(first: CallResult<T>, second: CallResult<K>, onSuccess: (T, K) -> R): CallResult<R> {

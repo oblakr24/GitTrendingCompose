@@ -11,7 +11,9 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 
@@ -41,6 +43,7 @@ class NetworkingModule {
         }
     }
 
+    @Named(Names.RETROFIT_DEFAULT)
     @Provides
     @Singleton
     fun provideRetrofit(
@@ -51,6 +54,19 @@ class NetworkingModule {
             .baseUrl(BuildConfig.API_BASE_URL)
             .client(client)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .build()
+    }
+
+    @Named(Names.RETROFIT_RAW_FILES)
+    @Provides
+    @Singleton
+    fun provideRawFilesRetrofit(
+        client: OkHttpClient,
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://raw.githubusercontent.com")
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .client(client)
             .build()
     }
 }

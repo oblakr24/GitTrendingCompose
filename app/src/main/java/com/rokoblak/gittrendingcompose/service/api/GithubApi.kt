@@ -1,7 +1,7 @@
 package com.rokoblak.gittrendingcompose.service.api
 
-import com.rokoblak.gittrendingcompose.data.repo.model.LoadErrorType
 import com.rokoblak.gittrendingcompose.data.repo.model.CallResult
+import com.rokoblak.gittrendingcompose.data.repo.model.LoadErrorType
 import com.rokoblak.gittrendingcompose.service.api.model.GitContentFile
 import com.rokoblak.gittrendingcompose.service.api.model.GithubRepoResponse
 import com.rokoblak.gittrendingcompose.service.api.model.GithubSearchResponse
@@ -9,7 +9,6 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.lang.Exception
 
 interface GithubApi {
     @GET("search/repositories?q=language=+sort:stars")
