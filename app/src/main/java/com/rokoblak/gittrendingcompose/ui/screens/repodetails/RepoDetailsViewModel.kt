@@ -73,7 +73,8 @@ class RepoDetailsViewModel @Inject constructor(
         val details = details
         return RepoContentUIState.Loaded(
             header = details.createHeaderData(),
-            rawReadme = rawReadme,
+            readmeFilename = readmeFilename,
+            readmeContent = readmeContent,
         )
     }
 

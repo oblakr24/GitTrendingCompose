@@ -6,10 +6,11 @@ import retrofit2.http.Path
 
 interface GithubRawFilesApi {
 
-    @GET("https://raw.githubusercontent.com/{owner}/{repo}/{branch}/README.md")
-    suspend fun getRepoReadme(
+    @GET("https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{filename}")
+    suspend fun getRepoFile(
         @Path("owner") owner: String,
         @Path("repo") repo: String,
         @Path("branch") branch: String,
+        @Path("filename") filename: String,
     ): Response<String>
 }

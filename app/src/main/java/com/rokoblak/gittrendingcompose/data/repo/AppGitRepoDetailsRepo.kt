@@ -84,10 +84,17 @@ class AppGitRepoDetailsRepo @Inject constructor(
             is CallResult.Success -> detsAndContents.value
         }
 
+        val readmeFile =
+            contents.firstOrNull { it.name.startsWith("README", ignoreCase = true) }
+
         val rawReadme = try {
-            // TODO: can be readme.rst
-            val res = rawFilesApi.getRepoReadme(owner, repo, branch = details.defaultBranch)
-            res.body()
+            if (readmeFile?.name != null) {
+                val res =
+                    rawFilesApi.getRepoFile(owner, repo, branch = details.defaultBranch, filename =readmeFile.name)
+                res.body()
+            } else {
+                null
+            }
         } catch (e: Throwable) {
             e.printStackTrace()
             null
@@ -97,7 +104,8 @@ class AppGitRepoDetailsRepo @Inject constructor(
             ExpandedGitRepositoryDetails(
                 details = details,
                 contents = contents,
-                rawReadme = rawReadme,
+                readmeFilename = readmeFile?.name,
+                readmeContent = rawReadme,
             )
         )
     }

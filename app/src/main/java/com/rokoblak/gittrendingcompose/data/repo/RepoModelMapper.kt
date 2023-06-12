@@ -59,6 +59,7 @@ object RepoModelMapper {
         RepoContentFile(
             name = file.name,
             type = file.type,
+            downloadUrl = file.download_url,
         )
     }
 }
