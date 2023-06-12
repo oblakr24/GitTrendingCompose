@@ -84,8 +84,10 @@ class AppGitRepoDetailsRepo @Inject constructor(
             is CallResult.Success -> detsAndContents.value
         }
 
+        val allReadmes = contents.filter { it.name.startsWith("README", ignoreCase = true) }
         val readmeFile =
-            contents.firstOrNull { it.name.startsWith("README", ignoreCase = true) }
+            allReadmes.firstOrNull { it.name.startsWith("README.", ignoreCase = true) } ?:
+            allReadmes.firstOrNull()
 
         val rawReadme = try {
             if (readmeFile?.name != null) {

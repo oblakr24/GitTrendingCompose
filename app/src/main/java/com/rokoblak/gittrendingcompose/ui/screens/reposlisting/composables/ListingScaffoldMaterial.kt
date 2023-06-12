@@ -2,6 +2,7 @@ package com.rokoblak.gittrendingcompose.ui.screens.reposlisting.composables
 
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -56,7 +57,11 @@ fun ListingScaffoldMaterial(
 
         }
     ) {
-        ListingScaffoldContent(state = state.innerContent, drawerState = drawerState, onAction = onAction)
+        ListingScaffoldContent(
+            state = state.innerContent,
+            drawerState = drawerState,
+            onAction = onAction
+        )
     }
 }
 
@@ -77,7 +82,7 @@ private fun ListingScaffoldContent(
             }
         }
     ) { paddingValues ->
-        paddingValues.calculateBottomPadding()
+        val topPadding = paddingValues.calculateTopPadding()
 
         val refreshScope = rememberCoroutineScope()
 
@@ -91,7 +96,11 @@ private fun ListingScaffoldContent(
                 refreshing = false
             }
         })
-        Box(Modifier.pullRefresh(pullRefreshState)) {
+
+        Box(
+            Modifier
+                .padding(top = topPadding)
+                .pullRefresh(pullRefreshState)) {
             GitReposListing(state) { action ->
                 onAction(action)
             }
@@ -119,7 +128,10 @@ private fun ListingScaffoldMaterialPreview() {
         )
     )
     GitTrendingComposeTheme {
-        ListingScaffoldMaterial(state = state, drawerState = DrawerState(DrawerValue.Closed), onAction = {})
+        ListingScaffoldMaterial(
+            state = state,
+            drawerState = DrawerState(DrawerValue.Closed),
+            onAction = {})
     }
 }
 
@@ -135,6 +147,9 @@ private fun ListingScaffoldMaterialWithDrawerPreview() {
         innerContent = GitReposListingData.Initial
     )
     GitTrendingComposeTheme {
-        ListingScaffoldMaterial(state = state, drawerState = DrawerState(DrawerValue.Open), onAction = {})
+        ListingScaffoldMaterial(
+            state = state,
+            drawerState = DrawerState(DrawerValue.Open),
+            onAction = {})
     }
 }

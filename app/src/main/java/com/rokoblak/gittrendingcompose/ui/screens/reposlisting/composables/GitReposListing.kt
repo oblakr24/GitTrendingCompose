@@ -6,11 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.rokoblak.gittrendingcompose.ui.common.composables.ErrorCell
 import com.rokoblak.gittrendingcompose.ui.common.verticalScrollbar
 import com.rokoblak.gittrendingcompose.ui.screens.repodetails.RepoDetailsRoute
@@ -39,8 +38,7 @@ fun GitReposListing(data: GitReposListingData, onAction: (ListingAction) -> Unit
                 (0..10).forEach { _ ->
                     LoadingCell()
                     Divider(
-                        startIndent = 12.dp,
-                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f)
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
                     )
                 }
             }
@@ -78,8 +76,7 @@ fun GitReposListing(data: GitReposListingData, onAction: (ListingAction) -> Unit
                         )
                         if (idx < data.items.lastIndex) {
                             Divider(
-                                startIndent = 12.dp,
-                                color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f)
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
                             )
                         }
                     }
