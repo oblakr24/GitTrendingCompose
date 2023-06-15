@@ -8,7 +8,7 @@ The app will load pages automatically once the user scrolls far enough (close en
 
 ## Video
 
-TODO
+[conv.webm](https://github.com/oblakr24/GitTrendingCompose/assets/32245831/9c6c8701-71fe-447f-bb9c-3390c1907a01)
 
 ## Features
 
@@ -46,3 +46,18 @@ TODO
 - [MockK](https://mockk.io/) for mocking in tests
 - [Turbine](https://github.com/cashapp/turbine) for testing Flows
 
+## Screenshots
+
+<b>Trending Repositories</b>
+
+<p align="center">
+  <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/32245831/246211925-6af1f399-f7c8-419b-9e87-918ea9eccf14.png" width="270" height="570">
+  <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/32245831/246211995-14138bc2-6f62-48c7-a6a0-7e05a4eb126f.png" width="270" height="570">
+</p>
+
+<b>Repository Details</b>
+
+<p align="center">
+  <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/32245831/246212082-993f0d68-eee3-46c4-be4b-9ecfe08b680a.png" width="270" height="570">
+  <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/32245831/246212172-035211c7-7c56-4f5c-84fe-bed0f590d574.png" width="270" height="570">
+</p>
