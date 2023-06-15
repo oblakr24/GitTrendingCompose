@@ -8,7 +8,7 @@ The app will load pages automatically once the user scrolls far enough (close en
 
 ## Video
 
-[conv.webm](https://github.com/oblakr24/GitTrendingCompose/assets/32245831/9c6c8701-71fe-447f-bb9c-3390c1907a01)
+https://github.com/oblakr24/GitTrendingCompose/assets/32245831/eb864a02-b4ad-41b5-afba-5e4b1f3d4b80
 
 ## Features
 
