@@ -31,7 +31,6 @@ https://github.com/oblakr24/GitTrendingCompose/assets/32245831/eb864a02-b4ad-41b
 
 **Stack:**
 - MVVM architecture (mix of MVVM and MVI)
-- Coroutines/Flows on the app module for interacting with RxJava3 observables from the BLE module
 - [Jetpack Compose](https://developer.android.com/jetpack/compose) and [Compose Navigation](https://developer.android.com/jetpack/compose/navigation): UI
 - [Hilt](https://dagger.dev/hilt/) for dependency injection
 - [Molecule](https://github.com/cashapp/molecule) for the usage of Compose Compiler in the VM layer for reactive state construction
@@ -43,6 +42,7 @@ https://github.com/oblakr24/GitTrendingCompose/assets/32245831/eb864a02-b4ad-41b
 - [DataStore](https://developer.android.com/topic/libraries/architecture/datastore) for persisting user preferences
 - [Compose Markdown](https://github.com/jeziellago/compose-markdown) for Markdown rendering
 - [Compose Shimmer](https://github.com/valentinilk/compose-shimmer) for loading item shimmer support
+- [Lottie-Compose](https://github.com/airbnb/lottie/blob/master/android-compose.md) for Composable JSON animations
 - [MockK](https://mockk.io/) for mocking in tests
 - [Turbine](https://github.com/cashapp/turbine) for testing Flows
 
