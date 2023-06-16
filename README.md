@@ -1,4 +1,4 @@
-# Git Trending - Compose
+# Git Trending Repos
 
 A demo app displaying the trending git repositories, sorted by the number of stars descending, and for displaying the details of repositories.
 
