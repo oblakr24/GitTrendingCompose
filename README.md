@@ -6,7 +6,7 @@ Made using the latest Android development stack and architectural and UI develop
 
 The app will load pages automatically once the user scrolls far enough (close enough to the last item) and supports offline mode and a togglable dark mode setting.
 
-**Partly intended as a comparison case study versus the** [Jetpack Compose implementation](https://github.com/oblakr24/GitTrendingXML).
+**Partly intended as a comparison case study versus the** [Legacy XML Views implementation](https://github.com/oblakr24/GitTrendingXML).
 
 ## Video
 
