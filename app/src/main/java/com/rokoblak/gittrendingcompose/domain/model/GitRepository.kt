@@ -1,4 +1,4 @@
-package com.rokoblak.gittrendingcompose.data.domain
+package com.rokoblak.gittrendingcompose.domain.model
 
 data class GitRepository(
     val id: Long,
@@ -9,8 +9,4 @@ data class GitRepository(
     val lang: String?,
     val stars: Long,
     val pageIdx: Int,
-) {
-    companion object {
-        const val PAGE_START = 1
-    }
-}
+)

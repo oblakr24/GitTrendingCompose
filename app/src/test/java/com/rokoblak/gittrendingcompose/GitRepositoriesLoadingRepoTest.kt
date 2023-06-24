@@ -3,7 +3,7 @@ package com.rokoblak.gittrendingcompose
 import app.cash.turbine.test
 import com.rokoblak.gittrendingcompose.data.datasource.LocalReposDataSource
 import com.rokoblak.gittrendingcompose.data.datasource.RemoteReposDataSource
-import com.rokoblak.gittrendingcompose.data.domain.GitRepository
+import com.rokoblak.gittrendingcompose.domain.model.GitRepository
 import com.rokoblak.gittrendingcompose.data.model.LoadedRepos
 import com.rokoblak.gittrendingcompose.data.model.ReposPage
 import com.rokoblak.gittrendingcompose.data.repo.AppGitReposRepo

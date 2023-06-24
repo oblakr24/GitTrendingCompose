@@ -1,4 +1,4 @@
-package com.rokoblak.gittrendingcompose.data.domain
+package com.rokoblak.gittrendingcompose.domain.model
 
 data class GitRepositoryDetails(
     val id: Long,

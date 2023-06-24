@@ -2,9 +2,9 @@ package com.rokoblak.gittrendingcompose.data.repo
 
 import com.rokoblak.gittrendingcompose.service.api.model.GithubSearchResponse
 import com.rokoblak.gittrendingcompose.data.db.model.GitRepoEntity
-import com.rokoblak.gittrendingcompose.data.domain.GitRepository
-import com.rokoblak.gittrendingcompose.data.domain.GitRepositoryDetails
-import com.rokoblak.gittrendingcompose.data.domain.RepoContentFile
+import com.rokoblak.gittrendingcompose.domain.model.GitRepository
+import com.rokoblak.gittrendingcompose.domain.model.GitRepositoryDetails
+import com.rokoblak.gittrendingcompose.domain.model.RepoContentFile
 import com.rokoblak.gittrendingcompose.service.api.model.GitContentFile
 import com.rokoblak.gittrendingcompose.service.api.model.GithubRepoResponse
 import java.time.Instant

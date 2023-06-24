@@ -1,6 +1,6 @@
 package com.rokoblak.gittrendingcompose.data.model
 
-import com.rokoblak.gittrendingcompose.data.domain.GitRepository
+import com.rokoblak.gittrendingcompose.domain.model.GitRepository
 
 data class ReposPage(
     val repos: List<GitRepository>,
