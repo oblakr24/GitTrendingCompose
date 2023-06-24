@@ -15,6 +15,8 @@ sealed interface CallResult<out T> {
         is Success -> mapper(value)
     }
 
+    val optValue get() = (this as? Success)?.value
+
     companion object {
 
         fun <T, K, R>compose(first: CallResult<T>, second: CallResult<K>, onSuccess: (T, K) -> R): CallResult<R> {

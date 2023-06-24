@@ -9,4 +9,8 @@ data class GitRepository(
     val lang: String?,
     val stars: Long,
     val pageIdx: Int,
-)
+) {
+    companion object {
+        const val PAGE_START = 1
+    }
+}

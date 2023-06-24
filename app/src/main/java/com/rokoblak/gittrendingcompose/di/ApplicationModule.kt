@@ -1,9 +1,5 @@
 package com.rokoblak.gittrendingcompose.di
 
-import com.rokoblak.gittrendingcompose.data.repo.AppGitRepoDetailsRepo
-import com.rokoblak.gittrendingcompose.data.repo.AppRepositoriesLoadingRepo
-import com.rokoblak.gittrendingcompose.data.repo.GitRepoDetailsRepo
-import com.rokoblak.gittrendingcompose.data.repo.GitRepositoriesLoadingRepo
 import com.rokoblak.gittrendingcompose.service.AppNetworkMonitor
 import com.rokoblak.gittrendingcompose.service.AppStorage
 import com.rokoblak.gittrendingcompose.service.NetworkMonitor
@@ -22,10 +18,4 @@ abstract class ApplicationModule {
 
     @Binds
     abstract fun provideNetworkMonitor(impl: AppNetworkMonitor): NetworkMonitor
-
-    @Binds
-    abstract fun provideLoadingRepo(impl: AppRepositoriesLoadingRepo): GitRepositoriesLoadingRepo
-
-    @Binds
-    abstract fun provideDetailsRepo(impl: AppGitRepoDetailsRepo): GitRepoDetailsRepo
 }

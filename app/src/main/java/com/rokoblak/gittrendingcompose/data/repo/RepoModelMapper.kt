@@ -28,6 +28,21 @@ object RepoModelMapper {
         }
     }
 
+    fun GithubSearchResponse.mapToDomain(page: Int): List<GitRepository> {
+        return items.withIndex().map { (idx, item) ->
+            GitRepository(
+                id = item.id,
+                name = item.name,
+                desc = item.description,
+                authorImgUrl = item.owner.avatar_url,
+                authorName = item.owner.login,
+                lang = item.language,
+                stars = item.stargazers_count,
+                pageIdx = page,
+            )
+        }
+    }
+
     fun GitRepoEntity.mapToDomain() = GitRepository(
         id = id,
         name = name,
@@ -37,6 +52,19 @@ object RepoModelMapper {
         lang = lang,
         stars = stars,
         pageIdx = pageIdx,
+    )
+
+    fun GitRepository.mapToEntity(orderIdx: Int) = GitRepoEntity(
+        id = id,
+        name = name,
+        desc = desc,
+        authorName = authorName,
+        authorImgUrl = authorImgUrl,
+        lang = lang,
+        stars = stars,
+        pageIdx = pageIdx,
+        orderIdx = orderIdx,
+        timestampMs = Instant.now().toEpochMilli(),
     )
 
     fun GithubRepoResponse.mapToDomain() = GitRepositoryDetails(
