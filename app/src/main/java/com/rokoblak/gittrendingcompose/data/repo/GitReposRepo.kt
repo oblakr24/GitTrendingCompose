@@ -67,10 +67,10 @@ class AppGitReposRepo @Inject constructor(
     override val flow: Flow<LoadableResult<ReposListing>> = results
 
     override suspend fun loadNext() {
-        if (reachedEnd()) return
-        if (loading()) return
+        if (results.value is LoadableResult.Loading) return
+        val lastPage = (results.value as? LoadableResult.Success)?.value
+        if (lastPage?.end == true) return
         loadingMore.value = true
-        val lastPage = lastPage()
         makeLoad(page = lastPage?.page?.let { it + 1 } ?: RemoteReposDataSource.PAGE_START,
             startIdx = lastPage?.lastIdx?.let { it + 1 } ?: 0)
     }
@@ -90,8 +90,4 @@ class AppGitReposRepo @Inject constructor(
         loadingMore.value = false
         calls.value = res
     }
-
-    private fun reachedEnd() = lastPage()?.end ?: false
-    private fun loading() = results.value is LoadableResult.Loading
-    private fun lastPage() = (results.value as? LoadableResult.Success)?.value
 }

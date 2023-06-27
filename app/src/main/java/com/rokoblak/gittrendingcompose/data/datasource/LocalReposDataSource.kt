@@ -13,7 +13,6 @@ import java.time.Instant
 import javax.inject.Inject
 
 interface LocalReposDataSource {
-
     val persistedItems: Flow<LoadedRepos>
     suspend fun clear()
     suspend fun store(page: ReposPage)
@@ -24,12 +23,9 @@ class AppLocalReposDataSource @Inject constructor(
 ) : LocalReposDataSource {
 
     override val persistedItems = dao.getAllFlow().map { entities ->
-        val all = entities.map {
-            it.mapToDomain()
-        }
+        val all = entities.map { it.mapToDomain() }
         LoadedRepos(repos = all, stale = entities.firstOrNull()?.isStale() ?: false)
     }
-
 
     override suspend fun store(page: ReposPage) {
         val entities = page.repos.mapIndexed { idx, repo ->
