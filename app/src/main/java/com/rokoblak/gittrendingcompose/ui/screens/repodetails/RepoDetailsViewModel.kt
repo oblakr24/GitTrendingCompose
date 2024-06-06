@@ -7,7 +7,7 @@ import androidx.compose.ui.platform.AndroidUiDispatcher
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.cash.molecule.RecompositionClock
+import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
 import com.rokoblak.gittrendingcompose.domain.model.ExpandedGitRepositoryDetails
 import com.rokoblak.gittrendingcompose.domain.model.GitRepositoryDetails
@@ -38,7 +38,7 @@ class RepoDetailsViewModel @Inject constructor(
     private val routeInput = RepoDetailsRoute.getIdFrom(savedStateHandle)
 
     val uiState: StateFlow<RepoDetailsUIState> by lazy {
-        scope.launchMolecule(clock = RecompositionClock.ContextClock) {
+        scope.launchMolecule(RecompositionMode.ContextClock) {
             RepoDetailsPresenter(useCase.loadResults(RepoDetailsInput(owner = routeInput.owner, repo = routeInput.repo)))
         }
     }

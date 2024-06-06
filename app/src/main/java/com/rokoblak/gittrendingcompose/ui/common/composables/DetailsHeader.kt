@@ -140,7 +140,7 @@ fun DetailsHeader(
                 overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.End,
 
-                style = MaterialTheme.typography.displayMedium,
+                style = MaterialTheme.typography.labelSmall,
                 color = rightButtonColor,
                 maxLines = 1,
             )
